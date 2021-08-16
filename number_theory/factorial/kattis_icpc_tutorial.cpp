@@ -1,0 +1,101 @@
+#include"bits/stdc++.h" // using "" instead of <>, so it will search locally for the precompiled version first
+using namespace std; 
+
+// 2**6 =  64
+// 2**8 =  256
+// 2**10 = 1,024
+// 2**15 = 32,768
+// 2**20 = 1,048,576
+// 2**25 = 33,554,432
+// 2**30 = 1,073,741,824
+// 2**32 = 4,294,967,296
+
+// int up to  2*10^9 (2^31-1)
+// ll up to   9*10^18 (2^63 -1)
+// ull up to 18*10^18 (2^64-1)/
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld;
+typedef pair<long, long> pll;
+typedef pair<int, int> pii;
+
+#define FOR(i, n) for(int i=0; i<n; i++)
+#define FORS(i, n) for(; i<n; i++)
+#ifdef DIRK
+#include "/Users/dirk/development/algorithms/templates/debug.h"
+#endif
+
+const int MOD = 1000000007;
+
+
+
+void solve(); 
+int main() 
+{
+    ios_base::sync_with_stdio(false);cin.tie(NULL); 
+
+    #ifdef DIRK 
+    freopen("/Users/dirk/development/algorithms/competitve/input.txt", "r", stdin); 
+    freopen("/Users/dirk/development/algorithms/competitve/error.txt", "w", stderr); 
+    freopen("/Users/dirk/development/algorithms/competitve/output.txt", "w", stdout); 
+    #endif 
+    
+    int t=1; 
+    //cin >> t;
+    //int count = 1;
+    while(t--) 
+    { 
+        //cout<<"Case #" << count++ << ": ";
+        solve(); 
+        //cout<<"\n";    
+    }
+    cerr<<"time taken : "<<(float)clock()/CLOCKS_PER_SEC<<" secs"<<endl; 
+    return 0; 
+} 
+void solve() 
+{
+    ll m, n;
+    int t;
+    cin >> m >> n >> t;
+    ld test = 1;
+    if(t==1){
+        while(n&& test<=m){
+            test*=n;
+            n--;
+        }
+    }else if(t ==2){
+        if(log2(m)<n){
+            test=m+1;
+        }
+    }else if(t ==3){
+        int e = 4;
+        while(e&& test<=m){
+            test*=n;
+            e--;
+        }
+    }else if(t ==4){
+        int e = 3;
+        while(e&& test<=m){
+            test*=n;
+            e--;
+        }
+    }else if(t ==5){
+        int e = 2;
+        while(e&& test<=m){
+            test*=n;
+            e--;
+        }
+    }else if(t==6){
+        test = (ld)n*(ld)log2((ld)n);
+    }else{
+        test = n;
+    }
+    if(test>m){
+        cout << "TLE";
+    }else{
+        cout << "AC";
+    }
+
+}
+
