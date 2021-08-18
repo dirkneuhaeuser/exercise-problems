@@ -16,7 +16,7 @@ Variants:
     - Con: Also not needed states will be computed
 
 
-Symantic-sugar for Top-Down pattern:
+Syntactic sugar for Top-Down pattern:
 ```
 int dp(int state1, state2){
   // check base cases
