@@ -91,7 +91,8 @@ int dp(int state1, state2){
         }
      }
      ```
-- **Longest Increasing Subsequence** (LIS)<br/>
+- **Longest Increasing Subsequence** (LIS)
+
     Let A be an array of integers. The LIS can be found with **DP** in <img src="https://render.githubusercontent.com/render/math?math=O(n^2)">. <br/>
     dp[i] := The length of the longest increasing subsequence, which is ending on i.
     ```
