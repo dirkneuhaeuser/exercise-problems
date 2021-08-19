@@ -55,7 +55,8 @@ void solve()
         A.push_back(num);
 
     }
-
+    // Basic LIS with reconstruction. 
+    // Major Problem, to get the latest LIS, if more occure, therefore just adjust LIS_end even if we are only at length k-1.
     int k = 0, LIS_end = -1;
     vector<int> LIS(A.size()), LIS_id(A.size()), par(A.size());
     FOR(i, A.size()){

@@ -65,13 +65,17 @@ int main()
 } 
 void solve() 
 {
-    // idea: Problem, we don't want to know the LIS, but the max. numbter of threads (or dolls, wenn as many smaller ones are in bigger ones).
+    // Complicated 2D LIS. Problem, we don't want to know the LIS, but the max. number of threads (or dolls, when as many smaller ones are in bigger ones).
     //
-    // In LIS, we binary search for the first bigger or equal one to substitute and try to expand our LIS when possible (if new eleement becomes head)
-    // Here, we binary search to the biggest thread end, which is still strictly smaller than the current doll to eat. No overwide an array but delete/insert from multiset
-    // Completely different, but the way you the first dimension is sorted ASC and the second DSC remains
+    // In LIS, we binary search for the first bigger or equal one to substitute and try to expand our LIS when possible (if new element becomes head)
+    // Here, we binary search to the biggest thread end, which is still strictly smaller than the current doll to eat.
+    // No overwide an array but delete/insert from multiset
     // 
-    // Consider each element in the multiset as a new thread, when first processing smaller dolls, you can delete small doll-thread if you have a current bigger doll, as you can fit the smaller in the bigger one. However, you still insert a new thread (for the bigger one).
+    // Completely different, but the way you sort the first dimension is ASC and the second DSC remains (because dolls need to be strictly increasing)
+    // 
+    // Consider each element in the multiset as a new thread.
+    // You can delete small doll-thread if you have a current bigger doll, as you can fit the smaller in the bigger one.
+    // However, you still insert a new thread (for the bigger one).
     int m; cin >> m;
     vector<pii> dolls;
     FOR(i, m){

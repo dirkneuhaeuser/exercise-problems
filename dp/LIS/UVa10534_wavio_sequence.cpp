@@ -48,7 +48,8 @@ int main()
 } 
 void solve() 
 {
-    // idea: construct greedy LIS from left and from right and save for each number the current max increasing subsequence in a new vector (sequenceLengthInc, sequenceLengthDec).
+    // idea: construct greedy LIS from left to right and from right to left (this equals LDS) `and save for each number the current max 
+    // increasing subsequence in a new vector (sequenceLengthInc, sequenceLengthDec).
     // Then greedily combine both and check where is the max.
     int n; 
     while(cin >> n){

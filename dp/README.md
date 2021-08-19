@@ -16,7 +16,7 @@ Variants:
     - Con: Also not needed states will be computed
 
 
-Symantic-sugar for Top-Down pattern:
+Syntactic sugar for Top-Down pattern:
 ```
 int dp(int state1, state2){
   // check base cases
@@ -91,5 +91,52 @@ int dp(int state1, state2){
         }
      }
      ```
+- **Longest Increasing Subsequence** (LIS)
+
+    Let A be an array of integers. The LIS can be found with **DP** in <img src="https://render.githubusercontent.com/render/math?math=O(n^2)">. <br/>
+    dp[i] := The length of the longest increasing subsequence, which is ending on i.
+    ```
+    int dp[n];
+    memset(dp, 1, sizeof dp);
+    for(int i=0; i<n; ++i){
+        for(int j=0; j<i; ++j){
+            if(A[j]<A[i]){
+                dp[i] = max(dp[i], dp[j]);
+            }
+        }
+    }
+    ```
+    Often better solution: **Greedy + Divide & Conquer** in <img src="https://render.githubusercontent.com/render/math?math=O(n \log k)">, where k is the length of the LIS.
+    ```
+    vector<int> LIS(n), par(-1, n), LIS_id(n);
+    int k=0, idxEnd=0;
+    for(int i=0; i<n; ++i){
+        int pos = lower_bound(LIS.begin(), LIS.begin()+k, A[i]) - LIS.begin();
+        if(pos == k){
+            k++;
+            idxEnd = i;
+        }
+        LIS[pos] = A[i];
+        LIS_id[pos] = i; // only as help for the parent vector par
+        if(pos > 0){
+            par[i] = LIS_id[pos - 1];
+        }
+    }
+
+    vector<int> ret; // ret contains the LIS (but reversed)
+    for(int i=0; i<k; ++k){
+        ret.push_back(A[idxEnd]);
+        idxEnd = par[idxEnd];
+    }
+    ```
+    Note:
+    - Use `upper_bound` instead of `lower_bound` if **not strictly increasing**. Then you will replace the first larger element with you current element and not the same element
+    - **LDS** (decreasing version) can be computed in two ways:
+      - Reverse the Array A and then do LIS
+      - Change the way you compare: `int pos = lower_bound(LIS.begin(), LIS.begin()+k, A[i], ::greater<int>()) - LIS.begin();` This will give the first element in LDS, which is equal or smaller. Recap, in LDS, you want to keep the values large as long (and early) as possible, such that you have more chances to add new elements.
+    - Sometimes the **greedy version is not possible**. For example in [UVa11790 - Muricia's Skyline](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&category=16&page=show_problem&problem=2890), you want the max. Number of increasing buildings, but you measure with the **width**.  Then you can greedily exchange a taller building with a smaller one, because the taller might be more useful in terms of weights.
+    - Often there are **2D LIS**, like in [UVa_01196 - Tiling Up Blocks](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&category=16&page=show_problem&problem=3637), [kattis - manhattanmornings](https://open.kattis.com/problems/manhattanmornings) or [kattis - nesteddolls](https://open.kattis.com/problems/nesteddolls). The basic idea here is **sort** the elements in **ascending order for the first dimension** and then for **the second**. If the requirment is given, that the LIS needs to be strictly increasing, then the second dimension needs to be sorted descending (you don't want that theses are building on top of each other). When you now go through the elements, then you know, that all preprocessed have a lower first dimension and you don't need to worry about that. Only you need to LIS in the second dimension.
+
+
 
 

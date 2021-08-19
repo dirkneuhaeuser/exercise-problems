@@ -55,7 +55,8 @@ bool isLexSmaller(vector<int> &a, vector<int> &b){
 }
 void solve() 
 {
-    // to find smalles lexicographically subsequence adjust the LISEned index when ever you find an element which is equal or smaller than the current head of the LIS vector.
+    // to find smalles lexicographically subsequence adjust the LISEned index when ever you find an element which is equal
+    // or smaller than the current head of the LIS vector.
     int n; 
     while(cin >> n && n){
         vector<int> A;
@@ -65,17 +66,15 @@ void solve()
         }
         vector<int> LIS(n), LISid(n), par(n);
         int k =0, LISEnd=0;
-        vector<int> LISEnds;
         FOR(i, n){
             int pos = lower_bound(LIS.begin(), LIS.begin() + k, A[i]) - LIS.begin();
             if(pos == k){
                 k++;
                 LISEnd = i;
-                LISEnds.push_back(i);
             }else if(pos == k-1 && A[i] <= LIS[pos]){
                 // to find lexicographically smalles, adjust end if possible to further behind,
-                // bc then you have more chances to have chosen smaller in general (more selection, and the greedy algo always take the smallest, overwriting of bigger ones)
-                LISEnds.push_back(i);
+                // bc then you have more chances to have chosen smaller in general (more selection,
+                // and the greedy algo always take the smallest, overwriting of bigger ones)
                 LISEnd = i;
             }
             LIS[pos] = A[i];

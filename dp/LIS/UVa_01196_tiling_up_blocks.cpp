@@ -51,6 +51,7 @@ void solve(){
     // idea: sort the PIIs in the first dimension (and also second dimension after that) and do LIS in the second.
     // Then any subsequence is alwyas increasing (not strictly here) in first dimension.
     // And by appliying LIS with the numbers of second dimension we find that subsequence which is increasing in both
+    // Note if it would be strictly increasing, we would have sorted the snd dimension descending. Alaos as not strictly here, use upper-bound
 	while(cin >> n && n!=0 ){
         vector<pii> nums;
 		for( int i=0; i<n; ++i ){
