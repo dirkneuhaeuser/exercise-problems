@@ -136,6 +136,56 @@ int dp(int state1, state2){
       - Change the way you compare: `int pos = lower_bound(LIS.begin(), LIS.begin()+k, A[i], ::greater<int>()) - LIS.begin();` This will give the first element in LDS, which is equal or smaller. Recap, in LDS, you want to keep the values large as long (and early) as possible, such that you have more chances to add new elements.
     - Sometimes the **greedy version is not possible**. For example in [UVa11790 - Muricia's Skyline](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&category=16&page=show_problem&problem=2890), you want the max. Number of increasing buildings, but you measure with the **width**.  Then you can greedily exchange a taller building with a smaller one, because the taller might be more useful in terms of weights.
     - Often there are **2D LIS**, like in [UVa_01196 - Tiling Up Blocks](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&category=16&page=show_problem&problem=3637), [kattis - manhattanmornings](https://open.kattis.com/problems/manhattanmornings) or [kattis - nesteddolls](https://open.kattis.com/problems/nesteddolls). The basic idea here is **sort** the elements in **ascending order for the first dimension** and then for **the second**. If the requirment is given, that the LIS needs to be strictly increasing, then the second dimension needs to be sorted descending (you don't want that theses are building on top of each other). When you now go through the elements, then you know, that all preprocessed have a lower first dimension and you don't need to worry about that. Only you need to LIS in the second dimension.
+- **Knapsack or Subset Sum**
+
+  Pseudo-polynomial DP solution in <img src="https://render.githubusercontent.com/render/math?math=O(nw)">, where n is the number of items and w the maximal capacity of the backpack. `dp[i][j]` then describes the **maximal value** you can get **after** you have processed the **first i items and using j weight**. **Subset-Sum **formulation: Is there a subset of a set of numbers, which sumed up equal a given value t?
+  
+  Note: 
+    - You can often **reduce the first dimension**. 
+      However, if you need to **reconstruct the actual solution**, then, you need it, as you have to backtrack throught the table.
+      Recap, that you then need, to go from right to left, in order to not double count.
+    - **Infinit Knapsack**. When each element can be used infinite times, than just for each item, go from left to right `dp[j] = max(dp[j], dp[j-w]+v)`.
+    - Restricted Usage. If you can only use m<=n items, add an additonal state
+
+
+  **Standard Subset-Sum**
+
+  ```
+  vector<vector<int>> dp(n+1, vector<int>(c+1, 0));
+  vector<pii> nums;      
+  for(int i=1; i<=n; ++i){
+      int v = nums[i-1].first;
+      int w = nums[i-1].second;
+      for(int j=c; j>=0; j--){
+          dp[i][j] = dp[i-1][j]; // might be optimal to skip current
+          if(j>=w){
+              dp[i][j] = max(dp[i-1][j], dp[i-1][j-w] + v); // or take it
+          }
+      }
+  }
+  ```
+  **Reconstruct solution**:
+  ```
+  vector<int> dp_get_solution(int weight, int value, vector<vector<int>> &dp, vector<pii> &nums){
+  // check for each number if it has been taken
+    vector<int> ret;
+    for(int i=n; i>0; --i){
+        if(weight >= nums[i-1].second && ((dp[i-1][weight - nums[i-1].second] + nums[i-1].first)   ==  dp[i][weight])){
+            ret.push_back(i-1);
+            weight -=  nums[i-1].second;
+        }
+
+    }
+    return ret;
+  ```
+- **Coin Change**
+
+  Very similar to Knapsack, but instead of maximising the value, we want either **minimise the used coins** or we want to **count the possiblities** to give a certain amount in different coins. <br/>
+  **Minimise Used Coins:** <br/>
+  `dp[i][j]` denotes the min. number of coins used to get to the values j by using up to the first i coins. Set the dp to 0 and only set `dp[0][0] = 1`. <br/>
+  **Count the possibities:** <br/>
+  `dp[i][j]` denotes the number of possibilities to give the values j by using up to the first i coins. Set the dp to INF and only set `dp[0][0] = 0`. Then just add up possibilities. <br/>
+        
 
 
 
