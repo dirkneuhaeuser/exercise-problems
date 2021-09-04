@@ -31,6 +31,15 @@ There are three  possibilities:
 3. Subproblems are **dominated** by spitting and merging: <br/>
    <img src="https://render.githubusercontent.com/render/math?math=t(n) = \omega(n^{\log_b(a)}) \rightarrow T(n) = \theta(t(n))"> <br/>
    
+ 
+### Example
+
+Let <img src="https://render.githubusercontent.com/render/math?math=T(N) = 2T(\frac{n}{2}) %2B n/2">, then <br/>
+<img src="https://render.githubusercontent.com/render/math?math=\text{crit} = O(n^{\log_2(2)}) = O(n)"> and <br/> 
+<img src="https://render.githubusercontent.com/render/math?math=O(t(n)) = n/2 = O(n)"> <br/>
+Thus, the second case: <img src="https://render.githubusercontent.com/render/math?math=O(T(n)) =  O(n \log(n))"> <br/>
+
+
 
 </br>
 </br>
