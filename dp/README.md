@@ -138,7 +138,8 @@ int dp(int state1, state2){
     - Often there are **2D LIS**, like in [UVa_01196 - Tiling Up Blocks](https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&category=16&page=show_problem&problem=3637), [kattis - manhattanmornings](https://open.kattis.com/problems/manhattanmornings) or [kattis - nesteddolls](https://open.kattis.com/problems/nesteddolls). The basic idea here is **sort** the elements in **ascending order for the first dimension** and then for **the second**. If the requirment is given, that the LIS needs to be strictly increasing, then the second dimension needs to be sorted descending (you don't want that theses are building on top of each other). When you now go through the elements, then you know, that all preprocessed have a lower first dimension and you don't need to worry about that. Only you need to LIS in the second dimension.
 - **Knapsack or Subset Sum**
 
-  Pseudo-polynomial DP solution in <img src="https://render.githubusercontent.com/render/math?math=O(nw)">, where n is the number of items and w the maximal capacity of the backpack. `dp[i][j]` then describes the **maximal value** you can get **after** you have processed the **first i items and using j weight**. **Boolean Subset-Sum** vie: Is there a subset of a set of numbers, which sumed up is equal to a given value t?
+  Pseudo-polynomial DP solution in <img src="https://render.githubusercontent.com/render/math?math=O(nw)">, where n is the number of items and w the maximal capacity of the backpack. `dp[i][j]` then describes the **maximal value** you can get **after** you have processed the **first i items and using j weight**. <br/>
+**Boolean Subset-Sum** vie: Is there a subset of a set of numbers, which sumed up is equal to a given value t?
   
   Note: 
     - You can often **reduce the first dimension**. 
