@@ -61,7 +61,7 @@ can be solved with the help of the Extended Euclidean Algorithm (EEA):
    ll positiveLeftLeft = left<0? (-1)*left: left;
    ll postiveLeftRight = left<0? (-1)*right: right;
    ```
-6. Now traverse all solutions which meet the requirements: <br?>
+6. Now traverse all solutions which meet the requirements: <br/>
    ```s = s - left```
    ```t = t + right```
     
