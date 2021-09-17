@@ -168,7 +168,7 @@ void retrieve(int cur, int last, int toGo, vector<int> &rest, vector<int>& idx){
 - **Knapsack or Subset Sum**
 
   Pseudo-polynomial DP solution in <img src="https://render.githubusercontent.com/render/math?math=O(nw)">, where n is the number of items and w the maximal capacity of the backpack. `dp[i][j]` then describes the **maximal value** you can get **after** you have processed the **first i items and using j weight**. <br/>
-**Boolean Subset-Sum** vie: Is there a subset of a set of numbers, which sumed up is equal to a given value t?
+**Boolean Subset-Sum**: Is there a subset of a set of numbers, which sumed up is equal to a given value t?
   
   Note: 
     - You can often **reduce the first dimension**. 
