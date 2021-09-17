@@ -178,7 +178,7 @@ void retrieve(int cur, int last, int toGo, vector<int> &rest, vector<int>& idx){
     - Restricted Usage. If you can only use m<=n items, add an additonal state
 
 
-  **Standard Subset-Sum**
+  **Standard Knapsack**
 
   ```
   vector<vector<int>> dp(n+1, vector<int>(c+1, 0));
@@ -203,6 +203,37 @@ void retrieve(int cur, int last, int toGo, vector<int> &rest, vector<int>& idx){
   **Count the possibities:** <br/>
   `dp[i][j]` denotes the number of possibilities to give the values j by using up to the first i coins. Set the dp to INF and only set `dp[0][0] = 0`. Then just add up possibilities. <br/>
         
+
+- **Traveling Salesman Person and Hamiltonian Paths**
+
+    **Hamiltonian Cycle Problem (HCP)**  Find a path, such that you visit each node exactly once and end up in the initial Position. NP-Complete (If you would    use DFS, in a fully connected graph you have O(n^n). With DP we save the stats `cur` and `mask` and achieve a complexity of <img src="https://render.githubusercontent.com/render/math?math=O(2n \cdot n^2)">.
+
+    Analogously, a **hamiltonian path** is np-complete. Difference: No need to return to initial position.
+
+    **Traveling Salesman Problem (TSP)** about finding the lowest-cost Hamiltonian Cycle.
+Top-Down (Held-Karp-Algortithm):
+parameter: n nodes (current node) and bitmask over the next (n-1) to visit
+    ```
+    int dp(int last, int mask, vector<pii> &coords){
+        int &ans = memo[last][mask];
+        if(ans != -1) return ans;
+        if(mask == 0){
+            return cost(0, last, coords);
+        }
+        ans = INF;
+        int m = mask;
+        while(m){
+            int v = LSOne(m);
+            int next = __builtin_ctz(v) + 1;
+            m ^= v;
+            ans = min(ans, dp(next, mask^v, coords) + cost(last, next, coords));
+        }
+        return ans;
+    }
+
+    ```
+    Note, it is very hard to iterate through bitmask in a Bottom-Up manner (first only the ones with one bit set, all numbers with two bits set...) <br/>
+    Also note, that the current node also contains the start node, while the bit mask does not. Thus, you have to offset +1 when getting the next node from the bitmask. This reduces the number of states by half.
 
 
 
