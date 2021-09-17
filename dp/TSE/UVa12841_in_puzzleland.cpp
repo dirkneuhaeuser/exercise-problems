@@ -101,7 +101,7 @@ void solve()
     // Find the lexicographically smallest solution, therefore, sort the bitmask, such that first bit(from right) stands
     // for the smalles lexicographically value and when passing through the mask int the top-down held-karp algorithm we
     // get the first set bit with LSOne, which aotmatically is the smallest possible lexicographically value for the current mask. 
-    // Then just check if it is indead possible to go that way or aboard. Also retrieve the solution afterwards.
+    // Then just check if it is indead possible to go that way or abort. Also retrieve the solution afterwards.
     int n, m; cin >> n >> m;
     vector<char> lets(n);
     FOR(i,n){
