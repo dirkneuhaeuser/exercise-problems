@@ -1,11 +1,11 @@
 # Dynamic Programming
 
-Requirement:
+### Requirement:
 1. **Optimal Substructure**: You can break down the given problem into a smaller subproblem; This then needs to be solved optimal.
 2. **Overlapping SubProblems**: The main advantage (over Backtracking) is that DP saves sates and therfore we do not need to recalculate subproblems.
 
 
-Variants:
+### Variants:
 1. **Top-Down**:
     - Pro: natural way of thinking (like Backtracking)
     - Pro: A subproblem will only be computed when needed
@@ -16,7 +16,7 @@ Variants:
     - Con: Also not needed states will be computed
 
 
-Syntactic sugar for Top-Down pattern:
+### Syntactic sugar (memoization) for Top-Down pattern:
 ```
 int dp(int state1, state2){
   // check base cases
@@ -25,6 +25,35 @@ int dp(int state1, state2){
   // else ... ans = ...
 }
 ```
+
+### Retrieve Solution
+Often it is not only asked to compute the optimum, but also to retrieve the exact soltution.
+
+**Bottom-Up Example**
+For example start in the last element and backtrack to the first element and only go an optimum way.
+```
+  for(int i=n; i>0; --i){
+      if(weight >= nums[i-1].second && ((dp[i-1][weight - nums[i-1].second] + nums[i-1].first)   ==  dp[i][weight])){
+          ret.push_back(i-1);
+          weight -=  nums[i-1].second;
+      }
+
+  }
+```
+**Tod-Down Example**
+Just copy the dp function and if the next recurstion (plus some addons) is equal the memo value at this current point, then go there.
+```
+void retrieve(int cur, int last, int toGo, vector<int> &rest, vector<int>& idx){
+    if(toGo < 0 || cur  == rest.size()) return;
+    int &ans = last == memo[cur][last][toGo];
+    int pot = dp(cur + 1, last, toGo, rest);
+    if(pot == ans ) return retrieve(cur+1, last, toGo, rest, idx);
+    idx.push_back(cur);
+    return retrieve(cur+1, cur, toGo-1, rest, idx);
+}
+```
+
+
 
 ## Classical Types:
 
@@ -165,20 +194,7 @@ int dp(int state1, state2){
       }
   }
   ```
-  **Reconstruct solution**:
-  ```
-  vector<int> dp_get_solution(int weight, int value, vector<vector<int>> &dp, vector<pii> &nums){
-  // check for each number if it has been taken
-    vector<int> ret;
-    for(int i=n; i>0; --i){
-        if(weight >= nums[i-1].second && ((dp[i-1][weight - nums[i-1].second] + nums[i-1].first)   ==  dp[i][weight])){
-            ret.push_back(i-1);
-            weight -=  nums[i-1].second;
-        }
-
-    }
-    return ret;
-  ```
+  
 - **Coin Change**
 
   Very similar to Knapsack, but instead of maximising the value, we want either **minimise the used coins** or we want to **count the possiblities** to give a certain amount in different coins. <br/>
