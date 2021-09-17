@@ -199,9 +199,12 @@ void retrieve(int cur, int last, int toGo, vector<int> &rest, vector<int>& idx){
 
   Very similar to Knapsack, but instead of maximising the value, we want either **minimise the used coins** or we want to **count the possiblities** to give a certain amount in different coins. <br/>
   **Minimise Used Coins:** <br/>
-  `dp[i][j]` denotes the min. number of coins used to get to the values j by using up to the first i coins. Set the dp to 0 and only set `dp[0][0] = 1`. <br/>
+  `dp[i][j]` denotes the min. number of coins used to get to the value j by using up to the first i coins. Set the dp to 0 and only set `dp[0][0] = 1`. <br/>
   **Count the possibities:** <br/>
-  `dp[i][j]` denotes the number of possibilities to give the values j by using up to the first i coins. Set the dp to INF and only set `dp[0][0] = 0`. Then just add up possibilities. <br/>
+  `dp[i][j]` denotes the number of possibilities to give the value j by using up to the first i coins. Set the dp to INF and only set `dp[0][0] = 0`. Then just add up possibilities. <br/>
+  **Check if possible:** <br/>
+  `dp[i][j]` denotes whether its possible to give the value j by using up to the first i coins. <br/>
+        
         
 
 - **Traveling Salesman Person and Hamiltonian Paths**
