@@ -59,7 +59,7 @@ void solve()
     // very complex infinite coin-change with inclusion-exclusion
     // Instead of prohibitive finite-coin change (which would be if d1 = 10^5 and v = 10^5 -> 10^10)
     //
-    // Instead: Infinite coin change and make use of inclusion/exlusion princible to account for overcounting, when you for example d1+1 times the c1 coin (needs to be subtracted).
+    // Instead: Infinite coin change and make use of inclusion/exlusion princible to account for overcounting. For example the possibility to have d1+1 times the c1 coin needs to be subtracted.
     // the same for d2 + 1times the c2 coin. However, then you need to add again when you have both (d1+1) times c1 and (d2+1) times c2...
     //
     vector<int> nums(4);

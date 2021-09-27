@@ -77,6 +77,8 @@ int dp(int cur, int mask, vector<vector<int>> &am){
 
 void solve() 
 {
+    // TSP Problem: Catch all unique pokemons and return to initial place. Problem: A pokemon can appear more then once. Try all masks and continue if the mask
+    // contains a pkm more than once or 0 times.
     int n; cin >> n;
     unordered_map<string, vector<int>> pos;
     vector<vector<int>> am(n+1, vector<int>(n+1, 0));
