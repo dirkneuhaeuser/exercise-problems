@@ -35,7 +35,9 @@ Often Problem are disguised and the difficulty is to see the max-flow behind it 
 ## When to use
 1. Normal **MaxFlow** problems (check max bandwith)
 2. Unweighted Maximum Cardinality Bipartite Matching (**MCBM**, The easiest kind of matching)
-3. **Assignment Problem** </br>
+   1. It can be shown that on bipartite Graphs, the algorithm has only <img src="https://render.githubusercontent.com/render/math?math=O(\sqrt{V})"> phases,
+      thus comes with a complexity <img src="https://render.githubusercontent.com/render/math?math=O(\sqrt{V} E)">
+4. **Assignment Problem** </br>
    Example: Emeis are thirsty between a and b, but at time x only 2 emeis can drink at a lake. Assign emeis to the lake.
 4. **Min-cut** </br>
    Example: [kattis - thekingofthenorth](https://open.kattis.com/problems/thekingofthenorth). Defend your ground with as few soldiers as possible.
