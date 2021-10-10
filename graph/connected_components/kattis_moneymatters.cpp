@@ -34,54 +34,45 @@ int main()
     cerr<<"time taken : "<<(float)clock()/CLOCKS_PER_SEC<<" secs"<<endl; 
     return 0; 
 } 
+enum {VISITED=-2, UNVISITED=-1};
+vector<int> visited;
+int dfs(int cur,  vector<vector<int>> &AL, vector<int> &money){
+    visited[cur] = VISITED;
+    int ret = money[cur];
+    for(int next: AL[cur]){
+        if(visited[next] == UNVISITED){
+            ret += dfs(next, AL, money);
+        }
+    }
+    return ret;
+}
+
 void solve() 
 {
-    int count = 1;
-    int n;
-    while(cin >> n) { 
-        unordered_map<string, int> inDegree;
-        unordered_map<string, int> appearanceIdx;
-        FOR(i, n){
-            string word; cin >> word;
-            inDegree[word] = 0;
-            appearanceIdx[word] = i;
-        }
-        unordered_map<string, vector<string>> afterAL; // meaning that string comes before vector<string>
-
-        int m; cin >> m;
-        FOR(i, m){
-            string word; cin >> word;
-            string word2; cin >> word2;
-            inDegree[word2]++;
-            afterAL[word].push_back(word2);
-        }
-
-        priority_queue<pair<int, string>, vector<pair<int, string>>, ::greater<pair<int, string>>> pq;
-        for(auto [k, v]: inDegree){
-            if(v==0){
-                pq.push({appearanceIdx[k], k});
-            }
-        }
-        vector<string> ret;
-        while(pq.size()){
-            auto [ii, curBeverage] = pq.top(); pq.pop();
-            ret.push_back(curBeverage);
-            for(string next: afterAL[curBeverage]){
-                inDegree[next]--;
-                if(inDegree[next] == 0){
-                    pq.push({appearanceIdx[next], next});
-                }
-            }
-            
-        }
-        //dbg(ret);
-
-        cout<<"Case #" << count++ << ": Dilbert should drink beverages in this order: ";
-        FOR(i, ret.size()){
-            cout <<ret[i];
-            if(i < ret.size() - 1) cout << " ";
-        }
-        cout <<"." << endl << endl;;
+    // The sum of all conected components needs to be 0.
+    int n, m;
+    cin >> n >> m;
+    vector<int> money(n, 0);
+    FOR(i, n){
+        cin >> money[i];
     }
+    vector<vector<int>> AL(n, vector<int>());
+    FOR(i, m){
+        int a, b; cin >> a >> b;
+        AL[a].push_back(b);
+        AL[b].push_back(a);
+    }
+    visited.assign(n, UNVISITED);
+    FOR(i, n){
+        if(visited[i] == UNVISITED){
+            int ans = dfs(i, AL, money);
+            if(ans != 0){
+                cout << "IMPOSSIBLE";
+                return;
+            }
+        }
+    }
+    cout << "POSSIBLE";
+
 }
 

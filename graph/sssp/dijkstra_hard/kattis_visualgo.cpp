@@ -36,52 +36,55 @@ int main()
 } 
 void solve() 
 {
-    int count = 1;
-    int n;
-    while(cin >> n) { 
-        unordered_map<string, int> inDegree;
-        unordered_map<string, int> appearanceIdx;
-        FOR(i, n){
-            string word; cin >> word;
-            inDegree[word] = 0;
-            appearanceIdx[word] = i;
-        }
-        unordered_map<string, vector<string>> afterAL; // meaning that string comes before vector<string>
+    // A modifed dijsktra to get the total number of shortest paths
+    // Note, the graph is a DAG, so simple dp would also be working
+    int n, m; scanf("%d %d", &n, &m);
+    vector<vector<pii>> AL(n, vector<pii>());
+    FOR(i, m){
+        int a, b, c;
+        scanf("%d %d %d", &a, &b, &c);
+        AL[a].push_back({b, c});
+    }
+    int from, to; scanf("%d %d", &from, &to);
 
-        int m; cin >> m;
-        FOR(i, m){
-            string word; cin >> word;
-            string word2; cin >> word2;
-            inDegree[word2]++;
-            afterAL[word].push_back(word2);
-        }
 
-        priority_queue<pair<int, string>, vector<pair<int, string>>, ::greater<pair<int, string>>> pq;
-        for(auto [k, v]: inDegree){
-            if(v==0){
-                pq.push({appearanceIdx[k], k});
+
+
+    // modified dijkstra
+    vector<int> dis(n, INF);
+    vector<int> paths(n, 0);
+    dis[from] = 0;
+    dis[from] = 1;
+    priority_queue<vector<int>, vector<vector<int>>, ::greater<vector<int>>>pq;
+    pq.push({0, from, 1});
+    while(pq.size()){
+        vector<int> top = pq.top(); pq.pop();
+        int w = top[0];
+        int cur = top[1];
+        int p = top[2];
+        while(pq.size()){
+            // try to merge as many paths which go to the current node.
+            // Note, this ensures, that we only touch each node once. Afterwards, this weight of the path to cur can only be higher
+            if(pq.top()[0] == w && pq.top()[1] == cur){
+                vector<int> alsoTake = pq.top(); pq.pop();
+                p+=alsoTake[2];
+            }else{
+                break;
             }
         }
-        vector<string> ret;
-        while(pq.size()){
-            auto [ii, curBeverage] = pq.top(); pq.pop();
-            ret.push_back(curBeverage);
-            for(string next: afterAL[curBeverage]){
-                inDegree[next]--;
-                if(inDegree[next] == 0){
-                    pq.push({appearanceIdx[next], next});
+        if(w > dis[cur]) continue;
+        if(w <= dis[cur]){
+            dis[cur] = w;
+            paths[cur] += p;
+            for(auto [next, nextW]: AL[cur]){
+                if(dis[next] >= dis[cur] + nextW){
+                    pq.push({dis[cur] + nextW, next, p});
                 }
             }
-            
         }
-        //dbg(ret);
-
-        cout<<"Case #" << count++ << ": Dilbert should drink beverages in this order: ";
-        FOR(i, ret.size()){
-            cout <<ret[i];
-            if(i < ret.size() - 1) cout << " ";
-        }
-        cout <<"." << endl << endl;;
     }
+    printf("%d", paths[to]);
+
+
 }
 

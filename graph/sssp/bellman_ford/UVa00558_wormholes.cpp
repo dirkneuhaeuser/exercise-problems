@@ -30,58 +30,48 @@ int main()
     freopen("/Users/dirk/development/algorithms/output.txt", "w", stdout); 
     #endif 
     
-    solve();
+    int t=1; 
+    scanf("%d", &t);
+    //int count = 1;
+    while(t--) 
+    { 
+        //cout<<"Case #" << count++ << ": ";
+        solve(); 
+    }
     cerr<<"time taken : "<<(float)clock()/CLOCKS_PER_SEC<<" secs"<<endl; 
     return 0; 
 } 
 void solve() 
 {
-    int count = 1;
-    int n;
-    while(cin >> n) { 
-        unordered_map<string, int> inDegree;
-        unordered_map<string, int> appearanceIdx;
-        FOR(i, n){
-            string word; cin >> word;
-            inDegree[word] = 0;
-            appearanceIdx[word] = i;
-        }
-        unordered_map<string, vector<string>> afterAL; // meaning that string comes before vector<string>
-
-        int m; cin >> m;
-        FOR(i, m){
-            string word; cin >> word;
-            string word2; cin >> word2;
-            inDegree[word2]++;
-            afterAL[word].push_back(word2);
-        }
-
-        priority_queue<pair<int, string>, vector<pair<int, string>>, ::greater<pair<int, string>>> pq;
-        for(auto [k, v]: inDegree){
-            if(v==0){
-                pq.push({appearanceIdx[k], k});
-            }
-        }
-        vector<string> ret;
-        while(pq.size()){
-            auto [ii, curBeverage] = pq.top(); pq.pop();
-            ret.push_back(curBeverage);
-            for(string next: afterAL[curBeverage]){
-                inDegree[next]--;
-                if(inDegree[next] == 0){
-                    pq.push({appearanceIdx[next], next});
+    int n, m; scanf("%d %d", &n, &m);
+    vector<vector<pii>> AL(n, vector<pii>());
+    FOR(i, m){
+        int a, b, c; scanf("%d %d %d", &a, &b, &c);
+        AL[a].emplace_back(b, c);
+    }
+    // bellman-ford;
+    vector<int> dis(n, INF); dis[0] = 0;
+    bool modified;
+    // O(V) here only n loops are neccesary until bellman ford terminates, IF there are no negative cycles.
+    // Here wo do one more to check if we can still improve (what means thate ther is a cycle)= false;
+    FOR(i, n+1){  
+        modified = false;
+        FOR(j, n){ // O(E)
+            for(auto [next, w]: AL[j]){
+                if(dis[next] > dis[j] + w){
+                    dis[next] = dis[j] + w;
+                    modified = true;
                 }
             }
-            
         }
-        //dbg(ret);
-
-        cout<<"Case #" << count++ << ": Dilbert should drink beverages in this order: ";
-        FOR(i, ret.size()){
-            cout <<ret[i];
-            if(i < ret.size() - 1) cout << " ";
-        }
-        cout <<"." << endl << endl;;
+        if(!modified) break;
     }
+    if(modified){
+        printf("possible\n");
+    }else{
+        printf("not possible\n");
+    }
+
+
 }
 

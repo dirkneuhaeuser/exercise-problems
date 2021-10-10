@@ -36,52 +36,48 @@ int main()
 } 
 void solve() 
 {
-    int count = 1;
-    int n;
-    while(cin >> n) { 
-        unordered_map<string, int> inDegree;
-        unordered_map<string, int> appearanceIdx;
-        FOR(i, n){
-            string word; cin >> word;
-            inDegree[word] = 0;
-            appearanceIdx[word] = i;
-        }
-        unordered_map<string, vector<string>> afterAL; // meaning that string comes before vector<string>
-
-        int m; cin >> m;
-        FOR(i, m){
-            string word; cin >> word;
-            string word2; cin >> word2;
-            inDegree[word2]++;
-            afterAL[word].push_back(word2);
-        }
-
-        priority_queue<pair<int, string>, vector<pair<int, string>>, ::greater<pair<int, string>>> pq;
-        for(auto [k, v]: inDegree){
-            if(v==0){
-                pq.push({appearanceIdx[k], k});
+    // Basic All-Pairs-Shortest-Path, Floyed Marshall.
+    int caseN = 1;
+    while(true){
+        int AM[100][100];
+        fill_n(&AM[0][0], 100*100, INF);
+        int a, b;
+        bool isTest = false;
+        while(true){
+            cin >> a >> b;
+            if(a == 0 && b == 0){
+                break;
             }
+            a--; b--;
+            AM[a][b]=1;
+            isTest = true;
         }
-        vector<string> ret;
-        while(pq.size()){
-            auto [ii, curBeverage] = pq.top(); pq.pop();
-            ret.push_back(curBeverage);
-            for(string next: afterAL[curBeverage]){
-                inDegree[next]--;
-                if(inDegree[next] == 0){
-                    pq.push({appearanceIdx[next], next});
+        if(!isTest) break;
+
+        // floyed marshall
+        for(int k=0; k<100; ++k){
+            for(int i=0; i<100; ++i){
+                for(int j=0; j<100; ++j){
+                    if(AM[i][k] != INF && AM[k][j] != INF){
+                        AM[i][j] = min(AM[i][j], AM[i][k]+AM[k][j]);
+                    }
                 }
             }
-            
         }
-        //dbg(ret);
+        int sum = 0, summand=0;
+        for(int i=0; i<100; ++i){
+            for(int j=0; j<100; ++j){
+                if(i != j  && AM[i][j] != INF){
+                    sum += AM[i][j];
+                    summand++;
+                }
+            }
+        }
+        double ret = (double)sum/summand;
+        printf("Case %d: average length between pages = %.3f clicks\n", caseN++, ret);
 
-        cout<<"Case #" << count++ << ": Dilbert should drink beverages in this order: ";
-        FOR(i, ret.size()){
-            cout <<ret[i];
-            if(i < ret.size() - 1) cout << " ";
-        }
-        cout <<"." << endl << endl;;
+
     }
+
 }
 

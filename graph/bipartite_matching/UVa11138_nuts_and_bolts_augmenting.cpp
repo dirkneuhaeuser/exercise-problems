@@ -1,3 +1,4 @@
+
 #include"bits/stdc++.h" // using "" instead of <>, so it will search locally for the precompiled version first
 using namespace std; 
                                                 // int up to 2*10^9 (2^31-1)
@@ -18,7 +19,6 @@ ll invEea(ll b, ll m){ll s, t; ll d = eea(b, m, s, t); if(d!=1) return -1; retur
 const int MOD = 1000000007;
 const int INF = 1<<30;
 
-
 void solve(); 
 int main() 
 {
@@ -30,58 +30,60 @@ int main()
     freopen("/Users/dirk/development/algorithms/output.txt", "w", stdout); 
     #endif 
     
-    solve();
+    int t=1; 
+    cin >> t;
+    int count = 1;
+    while(t--) 
+    { 
+        cout<<"Case " << count++ << ": ";
+        solve(); 
+        cout<<"\n";    
+    }
     cerr<<"time taken : "<<(float)clock()/CLOCKS_PER_SEC<<" secs"<<endl; 
     return 0; 
 } 
+vector<int> matchR, visitedL;
+
+bool aum(int LEFT, vector<vector<int>> &al){
+    if(visitedL[LEFT]) return false;
+    visitedL[LEFT] = 1;
+    for(int RIGHT: al[LEFT]){
+        if(matchR[RIGHT] == -1  || aum(matchR[RIGHT], al)){
+            matchR[RIGHT] = LEFT;
+            return true; //current can be matched
+        }
+    }
+    return false; // current cannot be matched
+}
+
 void solve() 
 {
-    int count = 1;
-    int n;
-    while(cin >> n) { 
-        unordered_map<string, int> inDegree;
-        unordered_map<string, int> appearanceIdx;
-        FOR(i, n){
-            string word; cin >> word;
-            inDegree[word] = 0;
-            appearanceIdx[word] = i;
-        }
-        unordered_map<string, vector<string>> afterAL; // meaning that string comes before vector<string>
-
-        int m; cin >> m;
-        FOR(i, m){
-            string word; cin >> word;
-            string word2; cin >> word2;
-            inDegree[word2]++;
-            afterAL[word].push_back(word2);
-        }
-
-        priority_queue<pair<int, string>, vector<pair<int, string>>, ::greater<pair<int, string>>> pq;
-        for(auto [k, v]: inDegree){
-            if(v==0){
-                pq.push({appearanceIdx[k], k});
+    // normal augmenting algorithm; O(V*E)
+    int n, m; cin >> n >> m;
+    matchR.assign(m, -1);
+    visitedL.assign(n, 0);
+    vector<vector<int>> al(n, vector<int>());
+    FOR(i, n){
+        FOR(j, m){
+            int num; cin >> num;
+            if(num==1){
+                al[i].push_back(j);
             }
         }
-        vector<string> ret;
-        while(pq.size()){
-            auto [ii, curBeverage] = pq.top(); pq.pop();
-            ret.push_back(curBeverage);
-            for(string next: afterAL[curBeverage]){
-                inDegree[next]--;
-                if(inDegree[next] == 0){
-                    pq.push({appearanceIdx[next], next});
-                }
-            }
-            
-        }
-        //dbg(ret);
-
-        cout<<"Case #" << count++ << ": Dilbert should drink beverages in this order: ";
-        FOR(i, ret.size()){
-            cout <<ret[i];
-            if(i < ret.size() - 1) cout << " ";
-        }
-        cout <<"." << endl << endl;;
     }
+    FOR(i, n){
+        visitedL.assign(n, 0);
+        aum(i, al);
+    }
+    int ret=0;
+    FOR(i, m){
+        if(matchR[i] != -1){
+            ret++;
+        }
+    }
+    cout << "a maximum of " <<  ret << " nuts and bolts can be fitted together";
+
+
+
 }
 

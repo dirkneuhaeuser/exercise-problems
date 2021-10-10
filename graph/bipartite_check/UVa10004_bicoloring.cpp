@@ -34,54 +34,42 @@ int main()
     cerr<<"time taken : "<<(float)clock()/CLOCKS_PER_SEC<<" secs"<<endl; 
     return 0; 
 } 
+enum{UNVISITED=-1};
+
+bool dfs(int cur, int col,  vector<vector<int>> &al, vector<int> &cols){
+    cols[cur] = col;
+    for(int next: al[cur]){
+        if(cols[next] == UNVISITED){
+            bool ans = dfs(next, 1-col, al, cols);
+            if(!ans) return false;
+        }else{
+            if(cols[next] != 1-col){
+                return false;
+            }
+        }
+    }
+    return true;
+    
+}
+
 void solve() 
 {
-    int count = 1;
+    // basic bipartite graph check. Use dfs and check if adjacent color is ok if exist.
     int n;
-    while(cin >> n) { 
-        unordered_map<string, int> inDegree;
-        unordered_map<string, int> appearanceIdx;
-        FOR(i, n){
-            string word; cin >> word;
-            inDegree[word] = 0;
-            appearanceIdx[word] = i;
-        }
-        unordered_map<string, vector<string>> afterAL; // meaning that string comes before vector<string>
-
+    while(cin >> n && n!= 0){
         int m; cin >> m;
-        FOR(i, m){
-            string word; cin >> word;
-            string word2; cin >> word2;
-            inDegree[word2]++;
-            afterAL[word].push_back(word2);
+        vector<vector<int>> al(n, vector<int>());
+        FOR(j, m){
+            int a, b; cin >> a >> b;
+            al[a].push_back(b);
+            al[b].push_back(a);
         }
-
-        priority_queue<pair<int, string>, vector<pair<int, string>>, ::greater<pair<int, string>>> pq;
-        for(auto [k, v]: inDegree){
-            if(v==0){
-                pq.push({appearanceIdx[k], k});
-            }
+        vector<int> cols(n, UNVISITED);
+        if(dfs(0, 0, al, cols)){
+            cout << "BICOLORABLE." << endl;
+        }else{
+            cout << "NOT BICOLORABLE." << endl;
         }
-        vector<string> ret;
-        while(pq.size()){
-            auto [ii, curBeverage] = pq.top(); pq.pop();
-            ret.push_back(curBeverage);
-            for(string next: afterAL[curBeverage]){
-                inDegree[next]--;
-                if(inDegree[next] == 0){
-                    pq.push({appearanceIdx[next], next});
-                }
-            }
-            
-        }
-        //dbg(ret);
-
-        cout<<"Case #" << count++ << ": Dilbert should drink beverages in this order: ";
-        FOR(i, ret.size()){
-            cout <<ret[i];
-            if(i < ret.size() - 1) cout << " ";
-        }
-        cout <<"." << endl << endl;;
     }
 }
 

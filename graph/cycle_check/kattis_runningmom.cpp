@@ -34,54 +34,62 @@ int main()
     cerr<<"time taken : "<<(float)clock()/CLOCKS_PER_SEC<<" secs"<<endl; 
     return 0; 
 } 
+
+enum {UNVISITED=-1, EXPLORED=-2, VISITED=-3};
+
+bool dfs(int cur, vector<vector<int>> &al, vector<int> &vis){
+    vis[cur] = EXPLORED;
+    for(int next: al[cur]){
+        if(vis[next] == EXPLORED){ // backward edge creats a cycle
+            return true;
+        }else if(vis[next]==UNVISITED){
+            if(dfs(next,al, vis))return true;
+        }
+    }
+    vis[cur] = VISITED;
+    return false;
+}
+
+
+
 void solve() 
 {
-    int count = 1;
-    int n;
-    while(cin >> n) { 
-        unordered_map<string, int> inDegree;
-        unordered_map<string, int> appearanceIdx;
-        FOR(i, n){
-            string word; cin >> word;
-            inDegree[word] = 0;
-            appearanceIdx[word] = i;
+    // Basic cycle check. Let the dfs return true if you find a backward edge.
+    int m; cin >> m;
+    unordered_map<string, int> name2Idx;
+    vector<vector<int>> al;
+    int idx = -1;
+    FOR(i, m){
+        string a, b; cin >> a >> b;
+        if(name2Idx.count(a)==0){
+            name2Idx[a]=++idx;
         }
-        unordered_map<string, vector<string>> afterAL; // meaning that string comes before vector<string>
+        if(name2Idx.count(b)==0){
+            name2Idx[b]=++idx;
+        }
+        if(name2Idx[a] >= al.size()){
+            vector<int> newL{name2Idx[b]};
+            al.push_back(newL);
+        }else{
+            al[name2Idx[a]].push_back(name2Idx[b]);
+        }
 
-        int m; cin >> m;
-        FOR(i, m){
-            string word; cin >> word;
-            string word2; cin >> word2;
-            inDegree[word2]++;
-            afterAL[word].push_back(word2);
+        if(name2Idx[b] >= al.size()){
+            vector<int> newL{};
+            al.push_back(newL);
         }
-
-        priority_queue<pair<int, string>, vector<pair<int, string>>, ::greater<pair<int, string>>> pq;
-        for(auto [k, v]: inDegree){
-            if(v==0){
-                pq.push({appearanceIdx[k], k});
-            }
+    }
+    string city;
+    int n = al.size();
+    while(cin >> city){
+        vector<int> v(n, UNVISITED);
+        int idx = name2Idx[city];
+        bool safe = dfs(idx, al, v);
+        if(safe){
+            cout << city << " safe" << endl;
+        }else{
+            cout << city << " trapped" << endl;
         }
-        vector<string> ret;
-        while(pq.size()){
-            auto [ii, curBeverage] = pq.top(); pq.pop();
-            ret.push_back(curBeverage);
-            for(string next: afterAL[curBeverage]){
-                inDegree[next]--;
-                if(inDegree[next] == 0){
-                    pq.push({appearanceIdx[next], next});
-                }
-            }
-            
-        }
-        //dbg(ret);
-
-        cout<<"Case #" << count++ << ": Dilbert should drink beverages in this order: ";
-        FOR(i, ret.size()){
-            cout <<ret[i];
-            if(i < ret.size() - 1) cout << " ";
-        }
-        cout <<"." << endl << endl;;
     }
 }
 

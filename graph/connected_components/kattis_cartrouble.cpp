@@ -34,54 +34,63 @@ int main()
     cerr<<"time taken : "<<(float)clock()/CLOCKS_PER_SEC<<" secs"<<endl; 
     return 0; 
 } 
+enum {VISITED=-2, UNVISITED=-1};
+
+int dfs(int cur, vector<vector<int>> &AL, vector<int> &visited){
+    visited[cur]=VISITED;
+    int ans = 1;
+    for(int next: AL[cur]){
+        if(visited[next] == UNVISITED){
+            ans += dfs(next, AL, visited);
+        }
+    }
+    return ans;
+}
+
 void solve() 
 {
-    int count = 1;
-    int n;
-    while(cin >> n) { 
-        unordered_map<string, int> inDegree;
-        unordered_map<string, int> appearanceIdx;
-        FOR(i, n){
-            string word; cin >> word;
-            inDegree[word] = 0;
-            appearanceIdx[word] = i;
+    // basic connected components check: towards the city on the original graph and from city to interconnecting road: reversed Graph
+    vector<vector<int>> AL(1000, vector<int>()),ALReversed(1000, vector<int>());
+    vector<pair<int, int>> all;
+    int n; cin >> n;
+    FOR(i, n){
+        int a, m; cin >> a >> m;
+        all.push_back({i, a});
+        FOR(j, m){
+            int b; cin >> b;
+            AL[a].push_back(b);
+            ALReversed[b].push_back(a);
         }
-        unordered_map<string, vector<string>> afterAL; // meaning that string comes before vector<string>
-
-        int m; cin >> m;
-        FOR(i, m){
-            string word; cin >> word;
-            string word2; cin >> word2;
-            inDegree[word2]++;
-            afterAL[word].push_back(word2);
-        }
-
-        priority_queue<pair<int, string>, vector<pair<int, string>>, ::greater<pair<int, string>>> pq;
-        for(auto [k, v]: inDegree){
-            if(v==0){
-                pq.push({appearanceIdx[k], k});
-            }
-        }
-        vector<string> ret;
-        while(pq.size()){
-            auto [ii, curBeverage] = pq.top(); pq.pop();
-            ret.push_back(curBeverage);
-            for(string next: afterAL[curBeverage]){
-                inDegree[next]--;
-                if(inDegree[next] == 0){
-                    pq.push({appearanceIdx[next], next});
-                }
-            }
-            
-        }
-        //dbg(ret);
-
-        cout<<"Case #" << count++ << ": Dilbert should drink beverages in this order: ";
-        FOR(i, ret.size()){
-            cout <<ret[i];
-            if(i < ret.size() - 1) cout << " ";
-        }
-        cout <<"." << endl << endl;;
     }
+    sort(all.begin(), all.end());
+    bool noProblem = true;
+
+    // out of city
+    vector<int> visited(1000, UNVISITED);
+    dfs(0, ALReversed, visited);
+    for(auto [idx, street]: all){
+        if(street == 0) continue;
+        if(visited[street] == UNVISITED){
+            noProblem = false;
+            cout << "TRAPPED " << street << endl;
+        }
+    }
+
+    // into city
+    visited.assign(1000, UNVISITED);
+    dfs(0, AL, visited);
+    for(auto [idx, street]: all){
+        if(street == 0) continue;
+        if(visited[street] == UNVISITED){
+            noProblem = false;
+            cout << "UNREACHABLE " << street << endl;
+        }
+    }
+    if(noProblem){
+        cout << "NO PROBLEMS" << endl;
+    }
+
+
+
 }
 

@@ -34,54 +34,66 @@ int main()
     cerr<<"time taken : "<<(float)clock()/CLOCKS_PER_SEC<<" secs"<<endl; 
     return 0; 
 } 
+
+enum {UNVISITED=-1, VISITED=-2};
+vector<set<int>> al;
+vector<int> visited;
+vector<set<int>> alReversed;
+void dfsPost(int cur, vector<int> &postOrder, bool rev){
+    visited[cur] = VISITED;
+    vector<set<int>> &adjList = (rev?alReversed:al);
+    for(int next: adjList[cur]){
+        if(visited[next] == UNVISITED){
+            dfsPost(next, postOrder, rev);
+        }
+    }
+    if(!rev){
+        postOrder.push_back(cur);
+    }
+
+}
+
+
 void solve() 
 {
-    int count = 1;
-    int n;
-    while(cin >> n) { 
-        unordered_map<string, int> inDegree;
-        unordered_map<string, int> appearanceIdx;
-        FOR(i, n){
-            string word; cin >> word;
-            inDegree[word] = 0;
-            appearanceIdx[word] = i;
-        }
-        unordered_map<string, vector<string>> afterAL; // meaning that string comes before vector<string>
-
-        int m; cin >> m;
+    // Count Strongly Connected Components. Idea of Kosarajus: Do a postOrder 'topological sort'.
+    // Reverse the Graph and go through this order in reversed. 
+    int n, m; 
+    while(cin >> n >> m){
+        if(n==0 && m == 0) break;
+        al.assign(n, set<int>());
+        alReversed.assign(n, set<int>());
         FOR(i, m){
-            string word; cin >> word;
-            string word2; cin >> word2;
-            inDegree[word2]++;
-            afterAL[word].push_back(word2);
-        }
-
-        priority_queue<pair<int, string>, vector<pair<int, string>>, ::greater<pair<int, string>>> pq;
-        for(auto [k, v]: inDegree){
-            if(v==0){
-                pq.push({appearanceIdx[k], k});
+            int a, b, c; cin >> a >> b >> c;
+            a--; b--;
+            al[a].insert(b);
+            alReversed[b].insert(a);
+            if(c==2){
+                al[b].insert(a);
+                alReversed[a].insert(b);
             }
         }
-        vector<string> ret;
-        while(pq.size()){
-            auto [ii, curBeverage] = pq.top(); pq.pop();
-            ret.push_back(curBeverage);
-            for(string next: afterAL[curBeverage]){
-                inDegree[next]--;
-                if(inDegree[next] == 0){
-                    pq.push({appearanceIdx[next], next});
-                }
+        visited.assign(n, UNVISITED);
+        vector<int> postOrder;
+        FOR(i, n){
+            if(visited[i] == UNVISITED){
+                dfsPost(i, postOrder, false);
             }
-            
         }
-        //dbg(ret);
-
-        cout<<"Case #" << count++ << ": Dilbert should drink beverages in this order: ";
-        FOR(i, ret.size()){
-            cout <<ret[i];
-            if(i < ret.size() - 1) cout << " ";
+        int scc = 0;
+        visited.assign(n, UNVISITED);
+        for(int i=n-1; i>=0; --i){
+            if(visited[postOrder[i]] == UNVISITED){
+                dfsPost(postOrder[i], postOrder, true);
+                scc++;
+            }
         }
-        cout <<"." << endl << endl;;
+        if(scc <= 1){
+            cout << 1 << endl;
+        }else{
+            cout << 0 << endl;
+        }
+        
     }
 }
 
