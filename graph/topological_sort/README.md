@@ -1,7 +1,7 @@
 ## Toplogical Sort
 
 Topological sort allows for sorting a list according to its dependencies (dependencies first).
-Therefore one need a adjacency-list `a[v] = [..u..]` which means that 'v' comes for all elments 'u' in the topological order.
+Therefore we need an adjacency-list `a[v] = [..u..]` which means that 'v' comes befor all elments 'u' in the topological order.
 
 ### DFS Variant (post-order)
 ```
