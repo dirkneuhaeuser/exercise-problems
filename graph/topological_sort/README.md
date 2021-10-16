@@ -23,7 +23,7 @@ Here the `order` vector only needs to be **reversed** to contain the correct top
 
 ### Kahn Algorithm
 The Kahn algorithm looks at the **in-degree** of each node `v`. If it is zero then this means, that no element needs to be before `v` and we can go ahead with it.
-Note that Kahn algorithm is **more flexible**, as it allows us to change the order for all elemnts which have **in-degree = zero** at the same time.
+Note that Kahn algorithm is **more flexible**, as it allows us to change the order for all elemnts which have **in-degree = zero** at the same time (by using a priority queue).
 
 ```
 priority_queue<int, vector<int>, ::greater<int>> pq; // maybe chose pair<int, int> for more flexible order
