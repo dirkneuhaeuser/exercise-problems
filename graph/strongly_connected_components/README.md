@@ -41,5 +41,12 @@ FOR(i, n){
     }
 }
 ```
-Often, a task is to reduce all SSC to single node and
-afterwards check for some critera (e.g. count all `in_degree == 0` nodes).
+### When to use
+1. Often, a task is to reduce all SSC to single node and
+afterwards check for some critera (e.g. count all `in_degree == 0` nodes). Questions like **how many dominos you need to push?**.
+2. Given a directed Graph G, **how many edges do you need to add, to make it a SCC?**
+   - Reduce all SSC in G to a single node -> G is now DAG
+   - If this DAG consists only of one node, the answer is 0
+   - Else: Count the number of in-degree == 0 nodes and also the out-degree=0 nodes. The max of both is the is the result. <br/>
+    
+   To see that this is a lower bound is easy. That its also a upper bound more complex. See [stack-overflow](https://stackoverflow.com/questions/14305236/minimal-addition-to-strongly-connected-graph), [codeforces](https://codeforces.com/blog/entry/15102).
