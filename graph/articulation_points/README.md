@@ -1,6 +1,7 @@
 ## Articulation Points/Bridges
-An Articulation Point is a vertix whose removal **disconnects the graph**. Thus it can't be a leave, but only intermediate vertixes.
-Similarly Ariculation Bridges disconnects the graph, when the edge (or bridge) is removed)
+An Articulation Point is a vertix whose removal **disconnects the undirected graph**. Thus it can't be a leave, but only intermediate vertixes.
+Similarly Ariculation Bridges disconnects the graph, when the edge (or bridge) is removed).
+Note some variants also come with directed graphs, but usually it applies only to undirected graphs.
 ```
 enum {UNVISITED=-1};
 vector<int> dfs_low, dfs_num, parent;
