@@ -2,6 +2,7 @@
 
 Topological sort allows for sorting a list according to its dependencies (dependencies first).
 Therefore we need an adjacency-list `a[v] = [..u..]` which means that 'v' comes befor all elments 'u' in the topological order.
+Both algorithm run in <img src="https://render.githubusercontent.com/render/math?math=O( V %2B E)">. When using the more flexible Kahn algorithm together with a priority queue the complexity will be <img src="https://render.githubusercontent.com/render/math?math=O(V \log V %2B E)">
 
 ### DFS Variant (post-order)
 ```
@@ -23,7 +24,7 @@ Here the `order` vector only needs to be **reversed** to contain the correct top
 
 ### Kahn Algorithm
 The Kahn algorithm looks at the **in-degree** of each node `v`. If it is zero then this means, that no element needs to be before `v` and we can go ahead with it.
-Note that Kahn algorithm is **more flexible**, as it allows us to change the order for all elemnts which have **in-degree = zero** at the same time (by using a priority queue).
+Note that Kahn algorithm is **more flexible**, as it allows us to change the order for all elemnts which have **in-degree = zero** at the same time (by using a priority queue). However, this would also let the complexity grow <img src="https://render.githubusercontent.com/render/math?math=O(V %2B E) \rightarrow O(V \log V %2B E)">.
 
 ```
 priority_queue<int, vector<int>, ::greater<int>> pq; // maybe chose pair<int, int> for more flexible order
