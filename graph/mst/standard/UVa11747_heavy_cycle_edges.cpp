@@ -6,6 +6,7 @@ typedef unsigned long long ull;                 // ull up to 18*10^18 (2^64-1)
 typedef long double ld;                         // ld up to  10*10^307
 typedef pair<long long, long long> pll;
 typedef pair<int, int> pii;
+typedef tuple<long long, int, int> tlii;
 #define FOR(i, n) for(int i=0; i<n; i++)
 #ifdef DIRK
 #include "/Users/dirk/development/algorithms/algorithms/templates/debug.h"
@@ -30,51 +31,72 @@ int main()
     freopen("/Users/dirk/development/algorithms/output.txt", "w", stdout); 
     #endif 
     
+
     solve();
     cerr<<"time taken : "<<(float)clock()/CLOCKS_PER_SEC<<" secs"<<endl; 
     return 0; 
 } 
 
-vector<bool> visited;
-void dfsGetLeavesInOrder(int cur, vector<vector<int>> &AL, vector<int> &leaves) {
-    visited[cur] = true;
-    bool leaf = true;
-    for(auto next : AL[cur]) {
-        if(!visited[next]) {
-            leaf = false;
-            dfsGetLeavesInOrder(next, AL, leaves);
+class DJS{
+public:
+    vector<int> rank, par;
+    DJS(int n){
+        par = vector<int>(n, 0);
+        for(int i=0; i<n; ++i)par[i] = i;
+        rank.assign(n, 0);
+    }
+    int getPar(int x){
+        if(par[x] == x) return x;
+        return par[x] = getPar(par[x]);
+    }
+    bool isSame(int x, int y){
+        return getPar(x) == getPar(y);
+    }
+    bool unionfy(int x, int y){
+        if(isSame(x, y)) return false;
+        int px = getPar(x), py = getPar(y);
+        if(rank[px] < rank[py]){
+            swap(px, py);
         }
+        par[py] = px;
+        if(rank[px] == rank[py])  rank[px]++;
+        return true;
     }
-    if(leaf) {
-        leaves.push_back(cur);
-    }
-}
+};
 void solve() 
 {
-    // Complicated matching of leaves
-    // One has to think a lot on how to connect the leaves in order to minimise the tunnels. Here it turns out to get the leaves within an inorder traversal
-    // and then connect them with an offset (half)
-    int n, headquarter; cin >> n >> headquarter;
-    vector<vector<int>> AL(n, vector<int>());
-    FOR(i, n-1){
-        int a, b;
-        cin >> a >> b;
-        AL[a].push_back(b);
-        AL[b].push_back(a);
-    }
-    visited.assign(n,false);
+    // basic MST problem.
+    int n, m; 
+    while(cin >> n >> m){
+        if(n == 0 && m == 0) break;
+        vector<tlii> edges;
+        ll total = 0;
+        FOR(i, m){
+            int a, b;
+            ll c; cin >> a >> b >> c;
+            total += c;
+            edges.push_back({c, a, b});
 
-    vector<int> leaves;
-    dfsGetLeavesInOrder(headquarter, AL, leaves);
-    if(AL[headquarter].size() == 1) {
-        leaves.push_back(headquarter);
+        }
+        sort(edges.begin(), edges.end());
+        DJS djs(n);
+        vector<ll> ret;
+        FOR(i, edges.size()){
+            auto [c, a, b] = edges[i];
+            if(!djs.unionfy(a, b)){
+                ret.push_back(c);
+            }
+        }
+        if(ret.size()>0){
+            FOR(i, ret.size()){
+                cout << ret[i];
+                if(i < ret.size()-1) cout << " ";
+            }
+            cout << endl;
+        }else{
+            cout << "forest" << endl;
+        }
     }
 
-    int total = leaves.size();
-    int connections = (total+1) / 2;
-    int offset = total / 2;
-    cout << connections << endl;
-    for(int i = 0; i < connections; i++) {
-        cout << leaves[i] << " " << leaves[i+offset] << endl;
-    }
 }
+

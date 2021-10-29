@@ -17,7 +17,7 @@ ll invFerm(ll a, ll m){ return modPow(a, m-2,m);}
 ll eea(ll a, ll n, ll &s, ll &t){ll xx = t = 0; ll yy = s = 1;while(n){ll q = a/n;ll u = n; n =a%n; a=u; u = xx; xx = s-q*xx; s = u;u = yy; yy = t-q*yy; t = u;}return a;}
 ll invEea(ll b, ll m){ll s, t; ll d = eea(b, m, s, t); if(d!=1) return -1; return smod(s,m);}
 const int MOD = 1000000007;
-const ll INF = 1ll<<60;
+const ll INF = 1ll << 62;
 
 
 void solve(); 
@@ -36,102 +36,76 @@ int main()
     return 0; 
 } 
 
-vector<vector<pii>> AL;
-vector<vector<pii>> ALRev;
-vector<ll> dis, disRev;
-vector<ll> counter;
+vector<vector<pll>> AL;
+vector<vector<pll>> ALRev;
+
+vector<ll> dijkstra(ll start, vector<vector<pll>> al){ // O(E * log(V))
+    // SSSP idea: Always take the next node with minimial distance
+    // once taken a node with minimial distance, you can't correct it, as a detour over others will make it worse
+    // al is weighted!
+    vector<ll> dist(al.size(), INF);
+    priority_queue<pll, vector<pll>, ::greater<pll>> nodes;
+    nodes.push({0, start});
+    while(nodes.size()){
+        auto [d, u] = nodes.top(); nodes.pop(); // intotal O(V * log(V^2))
+        if(dist[u] < INF) continue; // you have that node already 
+        dist[u] = d;
+        for(auto [v, w]: al[u]){
+            if(dist[v] == INF){
+                nodes.push({d + w, v}); // In total O(E * log(V^2)) -> we can add nodes multiple times, BUT: O(E * log(V^2)) = O(E * 2 * log(V)) = O(E * log(V))
+            }
+        }
+    }
+    return dist;
+}
 
 
 
 void solve() 
 {
-    // 1. reduce graph to only shortest paths (from end to begin, to have the differences left)
-    // 2. On that graph, pretend you have an undirected graph(thats ok, as all possible ways (apart of backwards are shortest paths) and find articulation points
-    // does not work :(
+    // 1. Option: Find articultion point in SSSP DAG (apply dijstra two times from start and from end, then use once more dijstra and go from start to all points where
+    // dist[end] == dist[x] + distReversed[x].
+    // A node is an articulation point, if after poping it from the queue, there is no other node in the queue
+    //
+    // 2. Option: Reduce graph to only shortest paths (again two dijkstra)
+    // Then on this graph, pretend you have an undirected graph(thats ok, as all possible ways (apart of backwards are shortest paths) and find articulation points
 
     int n, m; cin >> n >> m;
-    AL.assign(n, vector<pii>());
-    ALRev.assign(n, vector<pii>());
+    AL.assign(n, vector<pll>());
+    ALRev.assign(n, vector<pll>());
     FOR(i, m){
-        int a, b;
+        ll a, b;
         ll w; 
         cin >> a >> b >> w;
         AL[a].push_back({b, w});
         ALRev[b].push_back({a, w});
-        //if(a == 0) cout <<i <<  " " << b << endl;
     }
-    //dbg(AL);
     ll start, end; cin >> start >> end;
-    //cout << start << " " << end << endl;
 
-    dis.assign(n, INF);
-    disRev.assign(n, INF);
-    map<ll, ll> counter, counterRev;
+    vector<ll> dist = dijkstra(start, AL);
+    vector<ll> distRev = dijkstra(end, ALRev);
 
-    priority_queue<tll, vector<tll>, greater<tll>> pq;
-    pq.push({0, start, 1});
-    while(pq.size()){
-        auto[wCur, cur, a] = pq.top(); pq.pop();
-        while(pq.size()){
-            auto [ww, cc, aa] =pq.top();
-            if(cc == cur){
-                a+=aa;
-                pq.pop();
-            }else{
-                break;
-            }
-        }
-        if(dis[cur] < wCur) continue;
-        //cout << cur << endl;
-        counter[cur] += a;
-        if(dis[cur] == wCur)continue;
-        dis[cur] = wCur;
-        for(auto [next, wNext]: AL[cur]){
-            if(wNext + wCur <= dis[next]){
-                pq.push({wNext+wCur, next, a});
+
+    priority_queue<pll, vector<pll>, ::greater<pll>> nodes;
+    vector<ll> alr(n, false);
+    alr[start] = true;
+    nodes.push({0, start});
+    vector<ll> ret;
+    while(nodes.size()){
+        auto [d, u] = nodes.top(); nodes.pop(); // intotal O(V * log(V^2))
+        if(nodes.size() == 0) ret.push_back(u);
+        for(auto [v, w]: AL[u]){
+            if(alr[v] == false && dist[end] == dist[v] + distRev[v]){
+                alr[v] = true;
+                nodes.push({dist[v] + w, v});
             }
         }
     }
-    priority_queue<tll, vector<tll>, greater<tll>> pqRev;
-    pqRev.push({0, end, 1});
-    while(pqRev.size()){
-        auto[wCur, cur, a] = pqRev.top(); pqRev.pop();
-        while(pqRev.size()){
-            auto [ww, cc, aa] =pqRev.top();
-            if(cc == cur){
-                a+=aa;
-                pqRev.pop();
-            }else{
-                break;
-            }
-        }
-        if(disRev[cur] < wCur) continue;
-        //cout << cur << endl;
-        counterRev[cur] += a;
-        if(disRev[cur] == wCur)continue;
-        disRev[cur] = wCur;
-        for(auto [next, wNext]: ALRev[cur]){
-            if(wNext + wCur <= disRev[next]){
-                pqRev.push({wNext+wCur, next, a});
-            }
-        }
-    }
+    sort(ret.begin(), ret.end());
 
-    ll allShortestPaths = counter[end];
-    set<ll> all;
-    for(auto [k, v]: counter){
-        if(k == start || k == end ||((v*counterRev[k] == allShortestPaths) &&  (dis[k] + disRev[k]) == dis[end])){
-            all.insert(k);
-        }
+    FOR(i, ret.size()){
+        cout << ret[i];
+        if(i < ret.size() -1) cout << " ";
     }
-    bool first = true;
-    for(ll a: all){
-        if(!first)cout << " ";
-        cout << a;
-        first = false;
-    }
-    //dbg(all);
-
-
 }
 
