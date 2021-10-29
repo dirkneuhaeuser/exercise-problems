@@ -1,7 +1,7 @@
 ## Articulation Points/Bridges
 An Articulation Point is a vertix whose removal **disconnects the undirected graph**. Thus it can't be a leave, but only intermediate vertixes.
 Similarly Ariculation Bridges disconnects the graph, when the edge (or bridge) is removed).
-Note some variants also come with directed graphs, but usually it applies only to undirected graphs.
+Note some variants also come with directed graphs, but usually it applies only to undirected graphs. This algorithm runs in <img src="https://render.githubusercontent.com/render/math?math=O(V %2B E))">.
 ```
 enum {UNVISITED=-1};
 vector<int> dfs_low, dfs_num, parent;
@@ -9,7 +9,7 @@ vector<pii> bridges;
 vector<bool> is_articulation;
 int dfs_idx, root, root_children;
 
-void dfs(int cur, vector<vector<int>> &AL){
+void dfs(int cur, vector<vector<int>> &AL){ // O(V+E)
     dfs_num[cur] = dfs_low[cur] = dfs_idx++;
     for(int next: AL[cur]){
         if(dfs_num[next] == UNVISITED){
