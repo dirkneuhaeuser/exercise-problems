@@ -49,6 +49,8 @@ for(int j=0; j<edges.size(); ++j){
 }
 ```
 
+To check whether a spanntree exist, check that `djs.forrests == 1`.
+
 ### Prim
 ```
 int startIdx = 0;
