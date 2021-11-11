@@ -34,10 +34,8 @@ int main()
     
     int t=1; 
     cin >> t;
-    //int count = 1;
     while(t--) 
     { 
-        //cout<<"Case #" << count++ << ": ";
         solve(); 
         cout<<"\n";    
     }
@@ -54,7 +52,6 @@ int dijkstra(vector<pii> &bottles, int mliters){ // O(E * log(V))
     pq.emplace(start);
     while(pq.size()){
         auto [curStart, curEnd] = *pq.begin(); // intotal O(V * log(V))
-        //cout << curStart << " " << curEnd <<endl;
         pq.erase(pq.begin());
         for(auto [minV, maxV]: bottles){
             int nextMin = curStart + minV;
@@ -62,15 +59,12 @@ int dijkstra(vector<pii> &bottles, int mliters){ // O(E * log(V))
             int nextMax = min(curEnd + maxV, mliters);
             if(nextMax == mliters) return mliters;
             pii newWindow = {nextMin, nextMax};
-            //cout << " ------- " << endl;
-            //dbg(newWindow);
             auto it = pq.lower_bound(newWindow);
             auto itBelowCheck = it;
             while(itBelowCheck != pq.begin()){
                 itBelowCheck--;
                 pii prev = *itBelowCheck;
                 if(prev.second >= newWindow.first){
-                    //dbg(prev);
                     newWindow.first = min(prev.first, newWindow.first);
                     newWindow.second = max(prev.second, newWindow.second);
                     itBelowCheck = pq.erase(itBelowCheck); // you can decrement a erased iterator
@@ -94,7 +88,6 @@ int dijkstra(vector<pii> &bottles, int mliters){ // O(E * log(V))
             }
             pii oldWindow = {curStart, curEnd};
             if(newWindow != oldWindow){
-                //dbg(newWindow);
                 ret = max(ret, newWindow.second);
                 pq.insert(newWindow);
             }
@@ -109,8 +102,18 @@ int dijkstra(vector<pii> &bottles, int mliters){ // O(E * log(V))
 
 void solve() 
 {
+    // Subset-Sum/Knapsack with reducing the search-space
+    // Alternative: Dijkstra with reducing the search-space (I dont feel it is fitting here, but in CP4 its recommended as weighted shortest path)
+    //
+    // Main way to reduce the search space:
+    // Consider only one bottle with minCap and maxCap, then it will cover the this space: [minCap, maxCap], [2*minCap, 2*maxCap], ... [i*minCap, i*maxCap],...
+    // At one point we will have: i*maxCap >= (i+1)*minCap, and so there is no space more inbetween. Fix this i, lets call it maxBottles.
+    // Now we know for sure, that we can reduce any mili-liter query > maxBottles*maxCap to 0.
+    //
+    // Learnings:
     // if empty container -> begin and end equal
     // else: end iterator points right to the last element, while begin iterator points to the first element
+    //
     int liters, m; cin >> liters >> m;
     vector<pii> bottles;
     int mLiters = liters*1000;
@@ -120,11 +123,8 @@ void solve()
         bottles.push_back({a, b});
         ll div = (b-a);
         if(div == 0) continue;
-        limit = min(limit, (ll)a*a/div);
+        limit = min(limit, (ll)b*a/div);
     }
-    //vector<bool> possible(1'000'000'000, true);
-    //dbg(mLiters);
-    //dbg(maxLiters);
     if(mLiters>limit){
         cout << 0;
         return;
