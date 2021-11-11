@@ -72,6 +72,10 @@ int main()
 } 
 void solve() 
 {
+    // Make directed Graph strongly Connected:
+    // 1. Reduce Graph by all its SSC (merge to one node
+    // 2. Count nodes for which in-degree==0 and analogously for out-degrees.
+    // 3. The answer is the max of both
     int n, m; cin >> n >> m;
     vector<vector<int>> AL(n, vector<int>());
     FOR(i, m){
@@ -90,7 +94,6 @@ void solve()
             tarjan(i, AL);
         }
     }
-    //dbg(AL);
     vector<int> inDegree(n, 0), outDegree(n, 0);
     int cntVertex = 0;
     FOR(i, n){
@@ -111,9 +114,7 @@ void solve()
     }
     int zeroIn = 0;
     int zeroOut = 0;
-    //dbg(root);
-    //dbg(inDegree);
-    //dbg(outDegree);
+
     FOR(i, n){
         if(i == root[i]){
             if(inDegree[i] == 0) zeroIn++;
