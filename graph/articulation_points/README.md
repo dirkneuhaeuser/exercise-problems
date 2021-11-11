@@ -2,6 +2,8 @@
 An Articulation Point is a vertix whose removal **disconnects the undirected graph**. Thus it can't be a leave, but only intermediate vertixes.
 Similarly Ariculation Bridges disconnects the graph, when the edge (or bridge) is removed.
 Note some variants also come with directed graphs, but usually it applies only to undirected graphs. This algorithm runs in <img src="https://render.githubusercontent.com/render/math?math=O(V %2B E)">.
+
+Idea: Similar to tarjan-algorithm to get all SSC, we have a `dfs_low` array, and each children vertex, tries to minmise it using all adj-vertex, but its parent-vertex. When now this low value us lower than the `dfs_num` value of the parent we have found another way.
 ```
 enum {UNVISITED=-1};
 vector<int> dfs_low, dfs_num, parent;
