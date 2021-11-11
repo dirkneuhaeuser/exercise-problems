@@ -103,7 +103,8 @@ int dijkstra(vector<pii> &bottles, int mliters){ // O(E * log(V))
 void solve() 
 {
     // Subset-Sum/Knapsack with reducing the search-space
-    // Alternative: Dijkstra with reducing the search-space (I dont feel it is fitting here, but in CP4 its recommended as weighted shortest path)
+    // Alternative: PQ/Dijkstra with reducing the search-space (I dont feel it is fitting here, but in CP4 its recommended as weighted shortest path.
+    // However, I think it is faster, as we just compute selected/needed elements and do not go over all elements like in knapsack)
     //
     // Main way to reduce the search space:
     // Consider only one bottle with minCap and maxCap, then it will cover the this space: [minCap, maxCap], [2*minCap, 2*maxCap], ... [i*minCap, i*maxCap],...
@@ -111,9 +112,9 @@ void solve()
     // Now we know for sure, that we can reduce any mili-liter query > maxBottles*maxCap to 0.
     //
     // Learnings:
-    // if empty container -> begin and end equal
-    // else: end iterator points right to the last element, while begin iterator points to the first element
-    //
+    // -if empty container -> begin and end equal
+    // -else: end iterator points right to the last element, while begin iterator points to the first element
+    // -when erasing elements by using the iterator, it always returns the next valid iterator and only this can be used. The previous once cannot be increased/decreased
     int liters, m; cin >> liters >> m;
     vector<pii> bottles;
     int mLiters = liters*1000;
