@@ -3,7 +3,7 @@ On an undirected graph, the connected components can be found with an easy dfs. 
 a subset of the vertexes in the graph, within each vertex can reach each other vertex in the same SSC. **Tarjan's algorithm** runs in <img src="https://render.githubusercontent.com/render/math?math=O(V %2B E)"> and assigns each node to its SSC-root; the same root marks the same SSC.
 
 The main idea is that there is root node (start node) for each SSC. For this root holds, that it coudn't make its `dfs_low` value smaller than `dfs_num`. 
-All the nodes afterwars are part of this SCC (unless have been put to a different SSC already).
+All the nodes afterwars are part of this SCC (unless have been put to a different SSC already - saved in `visited`).
 
 ```
 vector<int> dfs_num, dfs_low, dfs_stack, visited, root;
