@@ -37,7 +37,7 @@ Note: Similarly, A graph with only 0/1 Weights can be handeld by a deque (very s
 
 ### Weigthed Shortest Paths
 
-If the edges are weighted, e.g. we want to minimise the time to go from a to b, we need to use a `priority_queue` instead of a normal `queue`, as the main idea is to always use the cell/node with the current lowest cost/time. This cannot imporved any further, but maybe can be used to improve others.
+If the edges are weighted, e.g. we want to minimise the time to go from a to b, we need to use a `priority_queue` instead of a normal `queue`, as the main idea is to always use the cell/node with the current lowest cost/time. This cannot improved any further, but maybe can be used to improve others.
 Unfortunately, the `priority_queue` in c++ doesn't allowe to update keys, therefore we use `set` here. The complexity is <img src="https://render.githubusercontent.com/render/math?math=O((V %2B E) \log V)">.
 
 Note Dijkstra does not work, when there is a negative cycle.
