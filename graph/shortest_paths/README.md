@@ -141,7 +141,7 @@ vector<bool> getNegativeCycleStarts(int start, vector<int> &dist, vector<vector<
 ```
 Note: 
 - Sometimes the task is about positive cycles, than **changing the sign** might do the trick.
-- Bellmann-Ford sometimes come also with further <img src="https://render.githubusercontent.com/render/math?math=O(V %2B E)">, which then need to be incorporated into the <img src="https://render.githubusercontent.com/render/math?math=O(V^3)"> loop.
+- Bellmann-Ford sometimes come also with further **restrictions**, which then need to be incorporated into the <img src="https://render.githubusercontent.com/render/math?math=O(V^3)"> loop.
 
 
 ### Applications
