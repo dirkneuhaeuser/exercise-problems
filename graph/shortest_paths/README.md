@@ -71,8 +71,9 @@ vector<ll> dijkstra(ll start, vector<vector<pll>> &AL){ // O(E * log(V))
 ```
 
 Notes:
-1. For **reconstruction** of a single shortest path use a parent vector and whenever you can update the next element, update also the parent (Works for bfs/dijkstra).
+1. For **reconstruction** of a single shortest path use a **parent vector** and whenever you can update the next element, update also the parent (Works for bfs/dijkstra).
 2. To know wheter an **edge/node is part of one of the shortest paths**: Apply weighted/unweighted from begining and again from end (reversed AL).
 A node is part of a shortest path if `dist[node] + distRev[node] == dist[endNode]`, analogously an edge is part of a shortest path if both connected nodes are part of the shortest path + the difference in between both `dist` values is the weight of the edge `w`.
+3. When there are some further monoton restrictions, apply them during the for-loop inside Dijkstra.
 
 
