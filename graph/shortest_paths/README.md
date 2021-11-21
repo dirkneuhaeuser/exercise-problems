@@ -9,8 +9,9 @@ Often when problem appear to be a **DP problem**, but are **not** defined on a *
 Single Source Shortest Path (SSSP) </br>
 Singe Source Single Destinaion Shortest Path (SSSDSP) </br>
 Multiple Sources Shortest Pahts (MSSP) </br>
+.. Other vairations, I will commonly use SSSP.
 
-### Unweighted Shortest Paths - BFS
+### Unweighted SSSP - BFS
 
 The normal **BFS** provides us with the shortest distance to all nodes in <img src="https://render.githubusercontent.com/render/math?math=O(V %2B E)">.
 
@@ -36,7 +37,7 @@ Note: Similarly, A graph with only **0/1 Weights** can be handeld by a **deque**
 
 
 
-### Weigthed Shortest Paths (no negative cycles) - Dijkstra
+### Weigthed SSSP (no negative cycles) - Dijkstra
 
 If the edges are weighted, e.g. we want to minimise the time to go from a to b, we need to use a `priority_queue` instead of a normal `queue`, as the main idea is to always use the cell/node with the current lowest cost/time. This node cannot improved any further, but maybe can be used to improve others.
 Unfortunately, the `priority_queue` in c++ doesn't allowe to update keys, therefore we use `set` here. The complexity is <img src="https://render.githubusercontent.com/render/math?math=O((V %2B E) \log V)">.
@@ -77,7 +78,7 @@ Notes:
 A node is part of a shortest path if `dist[node] + distRev[node] == dist[endNode]`, analogously an edge is part of a shortest path if both connected nodes are part of the shortest path + the difference in between both `dist` values is the weight of the edge `w`.
 3. When there are some further monoton restrictions, apply them during the for-loop inside Dijkstra.
 
-### Weigthed Shortest Paths with negative Cycle - Bellmann-Ford
+### Weigthed SSSP with negative Cycle - Bellmann-Ford
 When there are negative Cycles then Dijkstra would run forever without stopping. **Bellmann-Ford** alleviates this issue by running the **exact amount** of **iterations** needed to calculate the shortest path from the rooot to any other node, assuming there are no negative cycles. To check if there is a negative cycle, another single iteration can be made. If any weight improves, then there is a negative cycle. The algorithm runs in <img src="https://render.githubusercontent.com/render/math?math=O(V^3)"> and therfore requires a `V <= 450`.
 
 ```
