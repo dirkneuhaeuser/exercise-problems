@@ -47,6 +47,7 @@ int main()
 
 void solve() 
 {
+    // Connected component check with warshall's transitive closure check (possible as n<100).
     int n; 
     cin >> n;
     n+=2;
@@ -61,12 +62,10 @@ void solve()
         for(int j = i+1; j<n; ++j){
             auto [jx, jy] = coords[j];
             int dis = abs(ix-jx) + abs(iy - jy);
-            //cout << ix << " " << jx << " + " << iy << " " << jy << " "<< dis << " " << dis/50 << endl;
             AM[i][j] = ((ld)dis/50)<=20;
             AM[j][i] = ((ld)dis/50)<=20;
         }
     }
-    //dbg(AM);
 
     FOR(k, n) FOR(i, n) FOR(j, n){
         AM[i][j] = (AM[i][j] | (AM[i][k] & AM[k][j]));
