@@ -6,6 +6,8 @@ typedef unsigned long long ull;                 // ull up to 18*10^18 (2^64-1)
 typedef long double ld;                         // ld up to  10*10^307
 typedef pair<long long, long long> pll;
 typedef pair<int, int> pii;
+typedef tuple<int, int, int> tiii;
+typedef vector<int> vi;
 #define FOR(i, n) for(int i=0; i<n; i++)
 #ifdef DIRK
 #include "/Users/dirk/development/algorithms/algorithms/templates/debug.h"
@@ -19,25 +21,8 @@ const int MOD = 1000000007;
 const int INF = 1<<30;
 
 
-vector<bitset<5000>> memo;
-vector<bitset<5000>> memoRev;
-vector<int> v;
-
-bitset<5000> dfsAfterCur(int cur, vector<vector<int>> &AL, bool rev){
-    bitset<5000> &after = rev?memoRev[cur]:memo[cur];
-    if(v[cur]) return after;
-    v[cur]  = 1;
-    after.set(cur);
-    for(int next: AL[cur]){
-        after = after|dfsAfterCur(next, AL, rev);
-    }
-    return after;
-
-}
-
-
-
-void solve(); int main() 
+void solve(); 
+int main() 
 {
     ios_base::sync_with_stdio(false);cin.tie(NULL); 
 
@@ -53,36 +38,52 @@ void solve(); int main()
 } 
 void solve() 
 {
-    // to count if promotion is possible, we have to know the number of nodes after the current node in the DAG. As often, we don't want to overcount. Therfore, use a bitset and do only
-    // two dfs (for the reversed graph as well - nodes that have to come before). Atlernative: Do a dfs for each node and use a color to know if you have already useed this vertex
-    int prom1, prom2, n, m;
-    cin >> prom1 >> prom2 >> n >> m;
-    vector<vector<int>>AL(n, vector<int>());
-    vector<vector<int>>ALRev(n, vector<int>());
-    FOR(i, m){
-        int a, b;
-        cin >> a >> b;
-        AL[a].push_back(b);
-        ALRev[b].push_back(a);
-    }
-    v.assign(n, 0);
-    memo.assign(n, bitset<5000>());
+    // Transitive Closure connectivity check (Floyd-Warshall). If we can reach the same connector label we are unbound.
+    // Note: 
+    //    - the different labels are inportant, not the number of modecules
+    //    - when there is a moducule with 4 labels, connect each of them with the opposite of the other three. Meaning: we could use this label to connect to the matching label of the other three.
+    int n;cin >> n;
+    int maxSigns = 26*2;
+    vector<vector<bool>>AM(maxSigns, vector<bool>(maxSigns, false));
     FOR(i, n){
-        dfsAfterCur(i, AL, 0);
-    }
-    v.assign(n, 0);
-    memoRev.assign(n, bitset<5000>());
-    FOR(i, n){
-        dfsAfterCur(i, ALRev, 1);
-    }
-    int a=0, b=0, notb=0;
-    for(int i=0; i<n; ++i){
-        if (n-memo[i].count() < prom1){
-            a++;
+        string s; cin >> s;
+        vector<int> idxes;
+        FOR(j, 4){
+            char a = s[j*2];
+            char b = s[j*2 + 1];
+            if(a == '0'){
+                continue;
+            }else{
+                int let = a-'A';
+                let*=2;
+                if(b=='-'){
+                    let++;
+                }
+                idxes.push_back(let);
+            }
         }
-        if (n-memo[i].count() < prom2) b++;
-        if (memoRev[i].count() > prom2) notb++;
+        FOR(ii, idxes.size()){
+            FOR(jj, idxes.size()){
+                if(ii == jj) continue;
+                AM[idxes[ii]][idxes[jj]^1] = true; // there is a possible edge from ii to the opposite of jj
+            }
+        }
     }
-    cout << a << endl << b << endl <<notb;
+    FOR(k, maxSigns) FOR(i, maxSigns) FOR(j, maxSigns){
+        AM[i][j] = AM[i][j] || (AM[i][k] && AM[k][j]);
+    }
+    bool unbounded = false;
+    FOR(i, 26){
+        if(AM[2*i+1][2*i+1] || AM[2*i][2*i]){
+            unbounded = true;
+            break;
+        }
+    }
+    if(unbounded){
+        cout << "unbounded" << endl;
+    }else{
+        cout << "bounded" << endl;
+    }
+
 }
 

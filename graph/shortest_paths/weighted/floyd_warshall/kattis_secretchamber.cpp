@@ -6,6 +6,8 @@ typedef unsigned long long ull;                 // ull up to 18*10^18 (2^64-1)
 typedef long double ld;                         // ld up to  10*10^307
 typedef pair<long long, long long> pll;
 typedef pair<int, int> pii;
+typedef tuple<int, int, int> tiii;
+typedef vector<int> vi;
 #define FOR(i, n) for(int i=0; i<n; i++)
 #ifdef DIRK
 #include "/Users/dirk/development/algorithms/algorithms/templates/debug.h"
@@ -19,25 +21,8 @@ const int MOD = 1000000007;
 const int INF = 1<<30;
 
 
-vector<bitset<5000>> memo;
-vector<bitset<5000>> memoRev;
-vector<int> v;
-
-bitset<5000> dfsAfterCur(int cur, vector<vector<int>> &AL, bool rev){
-    bitset<5000> &after = rev?memoRev[cur]:memo[cur];
-    if(v[cur]) return after;
-    v[cur]  = 1;
-    after.set(cur);
-    for(int next: AL[cur]){
-        after = after|dfsAfterCur(next, AL, rev);
-    }
-    return after;
-
-}
-
-
-
-void solve(); int main() 
+void solve(); 
+int main() 
 {
     ios_base::sync_with_stdio(false);cin.tie(NULL); 
 
@@ -53,36 +38,44 @@ void solve(); int main()
 } 
 void solve() 
 {
-    // to count if promotion is possible, we have to know the number of nodes after the current node in the DAG. As often, we don't want to overcount. Therfore, use a bitset and do only
-    // two dfs (for the reversed graph as well - nodes that have to come before). Atlernative: Do a dfs for each node and use a color to know if you have already useed this vertex
-    int prom1, prom2, n, m;
-    cin >> prom1 >> prom2 >> n >> m;
-    vector<vector<int>>AL(n, vector<int>());
-    vector<vector<int>>ALRev(n, vector<int>());
-    FOR(i, m){
-        int a, b;
-        cin >> a >> b;
-        AL[a].push_back(b);
-        ALRev[b].push_back(a);
-    }
-    v.assign(n, 0);
-    memo.assign(n, bitset<5000>());
+    // Frequent check if a path from char a to char b exist -> Warshall's transitive closure
+    int n, q; cin >> n >> q;
+    vector<vector<bool>> AM(26, vector<bool>(26, false));
     FOR(i, n){
-        dfsAfterCur(i, AL, 0);
+        char a, b; cin >> a >> b;
+        int ai = a-'a';
+        int bi = b-'a';
+        AM[ai][bi] = true;
     }
-    v.assign(n, 0);
-    memoRev.assign(n, bitset<5000>());
-    FOR(i, n){
-        dfsAfterCur(i, ALRev, 1);
+    FOR(i, 26){
+        AM[i][i] = true;
     }
-    int a=0, b=0, notb=0;
-    for(int i=0; i<n; ++i){
-        if (n-memo[i].count() < prom1){
-            a++;
+
+    FOR(k, 26) FOR(i, 26) FOR(j, 26){
+        AM[i][j] = AM[i][j] | (AM[i][k] & AM[k][j]);
+    }
+    FOR(k, q){
+        string a, b; cin >> a >> b;
+        if(a.size() != b.size()){
+            cout << "no" << endl;
+            continue;
         }
-        if (n-memo[i].count() < prom2) b++;
-        if (memoRev[i].count() > prom2) notb++;
+        bool poss = true;
+        FOR(i, a.size()){
+            int ai = a[i] - 'a';
+            int bi = b[i] - 'a';
+            if(!AM[ai][bi]){
+                poss = false;
+                break;
+            }
+        }
+        if(!poss){
+            cout << "no" << endl;
+        }else{
+            cout << "yes" << endl;
+        }
+
     }
-    cout << a << endl << b << endl <<notb;
+
 }
 

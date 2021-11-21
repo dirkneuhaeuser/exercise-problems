@@ -6,6 +6,8 @@ typedef unsigned long long ull;                 // ull up to 18*10^18 (2^64-1)
 typedef long double ld;                         // ld up to  10*10^307
 typedef pair<long long, long long> pll;
 typedef pair<int, int> pii;
+typedef tuple<int, int, int> tiii;
+typedef vector<int> vi;
 #define FOR(i, n) for(int i=0; i<n; i++)
 #ifdef DIRK
 #include "/Users/dirk/development/algorithms/algorithms/templates/debug.h"
@@ -19,25 +21,8 @@ const int MOD = 1000000007;
 const int INF = 1<<30;
 
 
-vector<bitset<5000>> memo;
-vector<bitset<5000>> memoRev;
-vector<int> v;
-
-bitset<5000> dfsAfterCur(int cur, vector<vector<int>> &AL, bool rev){
-    bitset<5000> &after = rev?memoRev[cur]:memo[cur];
-    if(v[cur]) return after;
-    v[cur]  = 1;
-    after.set(cur);
-    for(int next: AL[cur]){
-        after = after|dfsAfterCur(next, AL, rev);
-    }
-    return after;
-
-}
-
-
-
-void solve(); int main() 
+void solve(); 
+int main() 
 {
     ios_base::sync_with_stdio(false);cin.tie(NULL); 
 
@@ -51,38 +36,45 @@ void solve(); int main()
     cerr<<"time taken : "<<(float)clock()/CLOCKS_PER_SEC<<" secs"<<endl; 
     return 0; 
 } 
-void solve() 
-{
-    // to count if promotion is possible, we have to know the number of nodes after the current node in the DAG. As often, we don't want to overcount. Therfore, use a bitset and do only
-    // two dfs (for the reversed graph as well - nodes that have to come before). Atlernative: Do a dfs for each node and use a color to know if you have already useed this vertex
-    int prom1, prom2, n, m;
-    cin >> prom1 >> prom2 >> n >> m;
-    vector<vector<int>>AL(n, vector<int>());
-    vector<vector<int>>ALRev(n, vector<int>());
-    FOR(i, m){
-        int a, b;
-        cin >> a >> b;
-        AL[a].push_back(b);
-        ALRev[b].push_back(a);
-    }
-    v.assign(n, 0);
-    memo.assign(n, bitset<5000>());
-    FOR(i, n){
-        dfsAfterCur(i, AL, 0);
-    }
-    v.assign(n, 0);
-    memoRev.assign(n, bitset<5000>());
-    FOR(i, n){
-        dfsAfterCur(i, ALRev, 1);
-    }
-    int a=0, b=0, notb=0;
-    for(int i=0; i<n; ++i){
-        if (n-memo[i].count() < prom1){
-            a++;
-        }
-        if (n-memo[i].count() < prom2) b++;
-        if (memoRev[i].count() > prom2) notb++;
-    }
-    cout << a << endl << b << endl <<notb;
-}
+int cost[101];
+int best[101];
+int last[101];
+char adj[101][101];
 
+int z,i,j,k,m,n,e,progress;
+void solve(){
+   while ((1 == scanf("%d",&n)) && n != -1){
+      memset(adj,0,sizeof(adj));
+      memset(last,0,sizeof(last));
+      for (i=1;i<=n;i++) best[i] = 0x3fffffff;
+      for (i=1;i<=n;i++) {
+         scanf("%d%d",&e,&m);
+         cost[i] = -e;
+         for (j=0;j<m;j++) {
+            scanf("%d",&k);
+            adj[i][k] = 1;
+         }
+      }
+      best[1] = -100;
+      for (z=0;;z++) {
+         progress = 0;
+         for (i=1;i<=n;i++) for (j=1;j<=n;j++) {
+            if (adj[i][j] &&
+                best[i] < 0 && best[i] + cost[j] < 0 &&
+                best[i] + cost[j] < best[j]){
+                   best[j] = best[i] + cost[j];
+                   progress = 1;
+                   last[j] = z;
+            }
+         }
+         if (!progress || best[n] < 0) break;
+         if (z == n) {
+            for (i=1;i<=n;i++) if (last[i] != z) best[i] = 0x3fffffff;
+            for (i=1;i<=n;i++) cost[i] = 0;
+         }
+      }
+      if (best[n] < 0 /*|| z == n*/) printf("winnable\n");
+      else printf("hopeless\n");
+   }
+   if (n != -1) printf("missing end delimiter\n");
+}

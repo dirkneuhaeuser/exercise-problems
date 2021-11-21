@@ -6,6 +6,8 @@ typedef unsigned long long ull;                 // ull up to 18*10^18 (2^64-1)
 typedef long double ld;                         // ld up to  10*10^307
 typedef pair<long long, long long> pll;
 typedef pair<int, int> pii;
+typedef tuple<int, int, int> tiii;
+typedef vector<int> vi;
 #define FOR(i, n) for(int i=0; i<n; i++)
 #ifdef DIRK
 #include "/Users/dirk/development/algorithms/algorithms/templates/debug.h"
@@ -19,25 +21,8 @@ const int MOD = 1000000007;
 const int INF = 1<<30;
 
 
-vector<bitset<5000>> memo;
-vector<bitset<5000>> memoRev;
-vector<int> v;
-
-bitset<5000> dfsAfterCur(int cur, vector<vector<int>> &AL, bool rev){
-    bitset<5000> &after = rev?memoRev[cur]:memo[cur];
-    if(v[cur]) return after;
-    v[cur]  = 1;
-    after.set(cur);
-    for(int next: AL[cur]){
-        after = after|dfsAfterCur(next, AL, rev);
-    }
-    return after;
-
-}
-
-
-
-void solve(); int main() 
+void solve(); 
+int main() 
 {
     ios_base::sync_with_stdio(false);cin.tie(NULL); 
 
@@ -51,38 +36,46 @@ void solve(); int main()
     cerr<<"time taken : "<<(float)clock()/CLOCKS_PER_SEC<<" secs"<<endl; 
     return 0; 
 } 
+vector<ll> dijkstra(int start, vector<vector<pii>> &AL, int end){ // O(E * log(V))
+    // Instead of PQ use a set to update nodes once you see a lower value. The complexity lower but in Big O still the same
+    // DOES NOT WORK WITH NEGATIVE WEIGHT CYCLES
+    ll n = AL.size();
+    vector<ll> dist(AL.size(), INF);
+    dist[start] = 0;
+    set<pll> pq;
+    pq.emplace(dist[start], start);
+    while(pq.size()){
+        auto [cost, cur] = *pq.begin(); // intotal O(V * log(V))
+        if(cur == end) return dist;
+        pq.erase(pq.begin());
+        for(auto [next, w]: AL[cur]){
+            if(dist[cur] + w >= dist[next]) continue;
+            auto it = pq.find({dist[next], next});
+            if(it != pq.end()){
+                pq.erase(it); // O(E * log(V));
+            }
+            dist[next] = dist[cur] + w;
+            pq.emplace(dist[next], next);
+
+        }
+    }
+    return dist;
+}
+
 void solve() 
 {
-    // to count if promotion is possible, we have to know the number of nodes after the current node in the DAG. As often, we don't want to overcount. Therfore, use a bitset and do only
-    // two dfs (for the reversed graph as well - nodes that have to come before). Atlernative: Do a dfs for each node and use a color to know if you have already useed this vertex
-    int prom1, prom2, n, m;
-    cin >> prom1 >> prom2 >> n >> m;
-    vector<vector<int>>AL(n, vector<int>());
-    vector<vector<int>>ALRev(n, vector<int>());
-    FOR(i, m){
-        int a, b;
-        cin >> a >> b;
-        AL[a].push_back(b);
-        ALRev[b].push_back(a);
-    }
-    v.assign(n, 0);
-    memo.assign(n, bitset<5000>());
+    // Weighted SSSP. Normal Dijkstra, but Bellmann_ford would also work.
+    int n, start, end;
+    cin >> n >> start >> end;
+    vector<vector<pii>> AL(n);
     FOR(i, n){
-        dfsAfterCur(i, AL, 0);
-    }
-    v.assign(n, 0);
-    memoRev.assign(n, bitset<5000>());
-    FOR(i, n){
-        dfsAfterCur(i, ALRev, 1);
-    }
-    int a=0, b=0, notb=0;
-    for(int i=0; i<n; ++i){
-        if (n-memo[i].count() < prom1){
-            a++;
+        FOR(j, n){
+            int w; cin >> w;
+            AL[i].emplace_back(j, w);
         }
-        if (n-memo[i].count() < prom2) b++;
-        if (memoRev[i].count() > prom2) notb++;
     }
-    cout << a << endl << b << endl <<notb;
+    vector<ll> dist = dijkstra(start, AL, end);
+    cout << dist[end];
+
 }
 

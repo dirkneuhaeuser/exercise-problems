@@ -5,7 +5,10 @@ typedef long long ll;                           // ll up to 9*10^18 (2^63 -1)
 typedef unsigned long long ull;                 // ull up to 18*10^18 (2^64-1)
 typedef long double ld;                         // ld up to  10*10^307
 typedef pair<long long, long long> pll;
+typedef pair<long long, bool> plb;
 typedef pair<int, int> pii;
+typedef tuple<int, int, int> tiii;
+typedef vector<int> vi;
 #define FOR(i, n) for(int i=0; i<n; i++)
 #ifdef DIRK
 #include "/Users/dirk/development/algorithms/algorithms/templates/debug.h"
@@ -16,28 +19,11 @@ ll invFerm(ll a, ll m){ return modPow(a, m-2,m);}
 ll eea(ll a, ll n, ll &s, ll &t){ll xx = t = 0; ll yy = s = 1;while(n){ll q = a/n;ll u = n; n =a%n; a=u; u = xx; xx = s-q*xx; s = u;u = yy; yy = t-q*yy; t = u;}return a;}
 ll invEea(ll b, ll m){ll s, t; ll d = eea(b, m, s, t); if(d!=1) return -1; return smod(s,m);}
 const int MOD = 1000000007;
-const int INF = 1<<30;
+const ll INF = 1<<30;
 
 
-vector<bitset<5000>> memo;
-vector<bitset<5000>> memoRev;
-vector<int> v;
-
-bitset<5000> dfsAfterCur(int cur, vector<vector<int>> &AL, bool rev){
-    bitset<5000> &after = rev?memoRev[cur]:memo[cur];
-    if(v[cur]) return after;
-    v[cur]  = 1;
-    after.set(cur);
-    for(int next: AL[cur]){
-        after = after|dfsAfterCur(next, AL, rev);
-    }
-    return after;
-
-}
-
-
-
-void solve(); int main() 
+void solve(); 
+int main() 
 {
     ios_base::sync_with_stdio(false);cin.tie(NULL); 
 
@@ -53,36 +39,47 @@ void solve(); int main()
 } 
 void solve() 
 {
-    // to count if promotion is possible, we have to know the number of nodes after the current node in the DAG. As often, we don't want to overcount. Therfore, use a bitset and do only
-    // two dfs (for the reversed graph as well - nodes that have to come before). Atlernative: Do a dfs for each node and use a color to know if you have already useed this vertex
-    int prom1, prom2, n, m;
-    cin >> prom1 >> prom2 >> n >> m;
-    vector<vector<int>>AL(n, vector<int>());
-    vector<vector<int>>ALRev(n, vector<int>());
-    FOR(i, m){
-        int a, b;
-        cin >> a >> b;
-        AL[a].push_back(b);
-        ALRev[b].push_back(a);
-    }
-    v.assign(n, 0);
-    memo.assign(n, bitset<5000>());
-    FOR(i, n){
-        dfsAfterCur(i, AL, 0);
-    }
-    v.assign(n, 0);
-    memoRev.assign(n, bitset<5000>());
-    FOR(i, n){
-        dfsAfterCur(i, ALRev, 1);
-    }
-    int a=0, b=0, notb=0;
-    for(int i=0; i<n; ++i){
-        if (n-memo[i].count() < prom1){
-            a++;
+    // Basic APSP + neg. cycle detection: If there is one k such that there is a path from i to k and from k to j and also AM[k][k] < 0, then we can make the way from i to j
+    // infinietely small...
+    // didnt reflect several edges between nodes
+    // When having negative weights, we need to be careful of using INF as 'no path' because AM[i][j] = min(AM[i][j], AM[i][k] + AM[k][j]) suddenly gets lower then INF
+    int n, m ,q; 
+    bool first = true;
+    while(cin >> n >> m >> q){
+        if(n == 0 && m == 0 && q == 0) break;
+        if(!first) cout << endl;
+        first = false;
+        vector<vector<ll>> AM(n, vector<ll>(n, INF));
+        FOR(i, n){
+            AM[i][i] = 0;
         }
-        if (n-memo[i].count() < prom2) b++;
-        if (memoRev[i].count() > prom2) notb++;
+        FOR(j, m){
+            int a, b;
+            ll c; 
+            cin >> a >> b >> c; // a and b maybe equal?
+            AM[a][b] = min(AM[a][b], c);
+        }
+        
+
+        FOR(k, n) FOR(i, n) FOR(j, n){
+            AM[i][j] = min(AM[i][j], AM[i][k] + AM[k][j]);
+        }
+        FOR(i, n) FOR(j, n) FOR(k, n){
+            if(AM[k][k] < 0 && AM[i][k] < INF && AM[k][j] < INF) AM[i][j] = -INF;
+        }
+
+        FOR(qq, q){
+            int a, b; cin >> a >> b;
+            if(AM[a][b] == -INF){
+                cout << "-Infinity" << endl;
+            }else if(AM[a][b] == INF){
+                cout << "Impossible" << endl;
+            }else{
+                cout << AM[a][b] << endl;
+            }
+        }
     }
-    cout << a << endl << b << endl <<notb;
+
+
 }
 

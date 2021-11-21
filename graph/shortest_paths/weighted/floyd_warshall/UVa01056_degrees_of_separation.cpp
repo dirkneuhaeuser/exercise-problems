@@ -6,6 +6,8 @@ typedef unsigned long long ull;                 // ull up to 18*10^18 (2^64-1)
 typedef long double ld;                         // ld up to  10*10^307
 typedef pair<long long, long long> pll;
 typedef pair<int, int> pii;
+typedef tuple<int, int, int> tiii;
+typedef vector<int> vi;
 #define FOR(i, n) for(int i=0; i<n; i++)
 #ifdef DIRK
 #include "/Users/dirk/development/algorithms/algorithms/templates/debug.h"
@@ -16,28 +18,11 @@ ll invFerm(ll a, ll m){ return modPow(a, m-2,m);}
 ll eea(ll a, ll n, ll &s, ll &t){ll xx = t = 0; ll yy = s = 1;while(n){ll q = a/n;ll u = n; n =a%n; a=u; u = xx; xx = s-q*xx; s = u;u = yy; yy = t-q*yy; t = u;}return a;}
 ll invEea(ll b, ll m){ll s, t; ll d = eea(b, m, s, t); if(d!=1) return -1; return smod(s,m);}
 const int MOD = 1000000007;
-const int INF = 1<<30;
+const ll INF = 1ll<<50;
 
 
-vector<bitset<5000>> memo;
-vector<bitset<5000>> memoRev;
-vector<int> v;
-
-bitset<5000> dfsAfterCur(int cur, vector<vector<int>> &AL, bool rev){
-    bitset<5000> &after = rev?memoRev[cur]:memo[cur];
-    if(v[cur]) return after;
-    v[cur]  = 1;
-    after.set(cur);
-    for(int next: AL[cur]){
-        after = after|dfsAfterCur(next, AL, rev);
-    }
-    return after;
-
-}
-
-
-
-void solve(); int main() 
+void solve(); 
+int main() 
 {
     ios_base::sync_with_stdio(false);cin.tie(NULL); 
 
@@ -51,38 +36,56 @@ void solve(); int main()
     cerr<<"time taken : "<<(float)clock()/CLOCKS_PER_SEC<<" secs"<<endl; 
     return 0; 
 } 
+unordered_map<string, int> name2idx;
+vector<string> idx2name;
+int addName(string name){
+    if(name2idx.count(name) == 0){
+        name2idx[name] = idx2name.size();
+        idx2name.push_back(name);
+    }
+    return name2idx[name];
+}
 void solve() 
 {
-    // to count if promotion is possible, we have to know the number of nodes after the current node in the DAG. As often, we don't want to overcount. Therfore, use a bitset and do only
-    // two dfs (for the reversed graph as well - nodes that have to come before). Atlernative: Do a dfs for each node and use a color to know if you have already useed this vertex
-    int prom1, prom2, n, m;
-    cin >> prom1 >> prom2 >> n >> m;
-    vector<vector<int>>AL(n, vector<int>());
-    vector<vector<int>>ALRev(n, vector<int>());
-    FOR(i, m){
-        int a, b;
-        cin >> a >> b;
-        AL[a].push_back(b);
-        ALRev[b].push_back(a);
-    }
-    v.assign(n, 0);
-    memo.assign(n, bitset<5000>());
-    FOR(i, n){
-        dfsAfterCur(i, AL, 0);
-    }
-    v.assign(n, 0);
-    memoRev.assign(n, bitset<5000>());
-    FOR(i, n){
-        dfsAfterCur(i, ALRev, 1);
-    }
-    int a=0, b=0, notb=0;
-    for(int i=0; i<n; ++i){
-        if (n-memo[i].count() < prom1){
-            a++;
+    // Basic ASAP problem to get the diameter of a graph. Note: its needed to set AM[i][i] = 0;
+    // P <= 50, Floyed-Warshall O(P^3) is fine
+    int n, m; 
+    int cnt = 1;
+    while(cin >> n >> m){
+        if(n == 0 && m == 0) break;
+        vector<vector<ll>> AM(n, vector<ll>(n, INF));
+        FOR(i, n){
+            AM[i][i] = 0;
         }
-        if (n-memo[i].count() < prom2) b++;
-        if (memoRev[i].count() > prom2) notb++;
+        name2idx.clear();
+        idx2name.clear();
+        FOR(j, m){
+            string a, b; cin >> a >> b;
+            int ai = addName(a);
+            int bi = addName(b);
+            AM[ai][bi] = 1;
+            AM[bi][ai] = 1;
+        }
+        FOR(k, n) FOR(i, n) FOR(j, n){
+            AM[i][j] = min(AM[i][j], AM[i][k] + AM[k][j]);
+        }
+        ll minE = 0;
+        FOR(i, n){
+            FOR(j, n){
+                minE = max(minE, AM[i][j]);
+                
+            }
+        }
+        cout << "Network " << cnt++ <<": ";
+        if(minE == INF){
+            cout << "DISCONNECTED" << endl;
+        }else{
+            cout << minE << endl;
+        }
+        cout << endl;
+
     }
-    cout << a << endl << b << endl <<notb;
+    
+
 }
 
