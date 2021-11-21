@@ -139,8 +139,9 @@ vector<bool> getNegativeCycleStarts(int start, vector<int> &dist, vector<vector<
 // // now if not NINFS[i] == true, dist[i] has the exact distance from 0 to i. Else we can say its negative INF.
 
 ```
-
-
+Note: 
+- Sometimes the task is about positive cycles, than **changing the sign** might do the trick.
+- Bellmann-Ford sometimes come also with further restrictions, which then need to be incorporated into the <img src="https://render.githubusercontent.com/render/math?math=O(V^3)"> loop.
 
 
 ### Applications
