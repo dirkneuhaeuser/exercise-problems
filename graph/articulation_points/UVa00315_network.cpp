@@ -103,9 +103,6 @@ void solve()
         }
 
         int numberOfFlags = accumulate(articulationPoints.begin(), articulationPoints.end(), 0);
-        //dbg(articulationPoints);
-        //dbg(dfsLow);
-        //dbg(dfsNum);
         cout << numberOfFlags << endl;
     }
 }

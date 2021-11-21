@@ -74,8 +74,7 @@ bool dfs(int cur, int goal){
 
 void solve() 
 {
-    // Articulation Bridge Problem.                                                                                      │ 13 9 1  
-120                 pigeonValue[i] += ans;                                                               
+    // Articulation Bridge Problem. 
     // Simple Path: Each vertex will be used at max one time.
     // Task here: Check if there exist exactly ONE simple path.
     // We can reduce this problem to a graph of only articulation bridges. If at some point we would take a non-articulation bridge, that means, that there is also an other corridor,
