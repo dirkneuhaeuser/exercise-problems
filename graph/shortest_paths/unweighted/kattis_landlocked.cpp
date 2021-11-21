@@ -41,7 +41,7 @@ void solve()
     // With deque and also with distance vector instead of level bfs
     // Push free-element to front else to back.
     // Note: Like in Dijkstra you see some adjacent nodes which you might see again for a lower price
-    // Note: With Deque 0.62s for all test cases, with deque because of 0-1 weights 0.07s
+    // Note: With Priority-Queue 0.62s for all test cases, with deque because of 0-1 weights 0.07s
     int n, m; cin >> n >> m;
     vector<vector<int>> dis(n, vector<int>(m, INF));
     vector<vector<char>> grid(n, vector<char>(m, '.'));
