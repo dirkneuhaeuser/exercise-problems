@@ -33,8 +33,9 @@ while(q.size()){
 }
 ```
 
-Note: Similarly, A graph with only **0/1 Weights** can be handeld by a **deque** (very similar to Dijkstra). If we have a 0 Edge we will push it to the front, else to the back. Dijkstra would works just as fine, but this way we save us from using an expensive priority-queue.
-
+Note: 
+- Similarly, A graph with only **0/1 Weights** can be handeld by a **deque** (very similar to Dijkstra). If we have a 0 Edge we will push it to the front, else to the back. Dijkstra would works just as fine, but this way we save us from using an expensive priority-queue.
+- **Shortest Cycle**: Shortest Path on undirected Graphs: Bfs from i to j and if you have seen j already -> Cycle. 
 
 
 ### Weigthed SSSP (no negative cycles) - Dijkstra
@@ -144,8 +145,44 @@ Note:
 - Sometimes the task is about positive cycles, than **changing the sign** might do the trick.
 - Bellmann-Ford sometimes come also with further **restrictions**, which then need to be incorporated into the <img src="https://render.githubusercontent.com/render/math?math=O(V^3)"> loop.
 
+### APSP - Floyd-Warshall
+Instead of computing the shortest path from a single source node, sometimes it is required to have the shortest distance between all pairs of nodes.
+Floyed-Warshall computes All-Pairs-Shortest-Paths in <img src="https://render.githubusercontent.com/render/math?math=O(V^3)"> in a dp-fashion by trying to find smaller detours from i to j over k:
+```
 
-### Applications
-- Shortest Cycle: Shortest Path from i to j and from j to i. Within Floyd-Warshall, we can just look at `AM[i][i]`.
+// for reconstruction:
+for(int i=0; i<n; ++i){
+    for(int j=0; j<n; ++j){
+        par[i][j] = i;
+    }
+}
+for(int k=0; k<n; ++k){
+    for(int i=0; i<n; ++i){
+        for(int j=0; j<n; ++j){
+            if(AM[i][j] > AM[i][k] + AM[k][j]){
+                AM[i][j] = AM[i][k] + AM[k][j];
+                par[i][j] = par[k][j]; // alwyas points to the penultimate element in the path. For example par[k][j] points to x in  k a b c x j
+            }
+        }
+    }
+}
+// retrievel of solution from i to j
+int cur = j;
+while(true){
+    ans.push_back(cur);
+    if(i == cur){
+        break;
+    }
+    cur = par[i][cur];
+}
+```
+Note / Applications:
+- When we need to reconstruct a shortest path between i and j then we need a **2D reconstruction**.
+- In Floyed-Warshall the inital AM do not need all start-values as long these can be build by the **principe of transitivity** (can save a lot of time)
+- **Transitive closure problem**: Only check need: Is there a path from a to b. Everyhing can be Boolean. `AM[i][j] = AM[i][j] || (AM[i][k] && AM[k][j])`
+- For some compound problems, **optimal subpaths** in form of `AM[i][b] + AM[a][j] + roadLength` or `AM[a][i] + AM[i][b]` are often useful.
+- **Diameter** of a graph: The maximum shortest path between any pair nod nodes.
+- **Shortest Cycle**: On the diagonal `AM[i][i]` gives you the shortest cycle. If negative: We can go to -INF.
+
 
 
