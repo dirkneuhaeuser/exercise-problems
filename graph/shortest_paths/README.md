@@ -1,7 +1,8 @@
 ## Shortest Paths
 
 When the edges are not weighter we can use a **bfs** for the shortes paths, othrweise **Dijkstra**'s algorithm.
-Dijkstra uses the same idea of a BFS, but instead of a normal queue, it uses a **priority queue to favour nodes with a smaller distance**. 
+Dijkstra uses the same idea of a BFS, but instead of a normal queue, it uses a **priority queue to favour nodes with a smaller distance**.
+Often when problem appear to be a **DP problem**, but are **not** defined on a **DAG**, then most certainly these are BFS problems.
 
 **Typic Examples**:
 
