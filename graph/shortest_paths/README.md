@@ -77,3 +77,8 @@ A node is part of a shortest path if `dist[node] + distRev[node] == dist[endNode
 3. When there are some further monoton restrictions, apply them during the for-loop inside Dijkstra.
 
 
+
+### Applicaions
+- Shortest Cycle: Shortest Path from i to j and from j to i. Within Floyd-Warshall, we can just look at `AM[i][i]`.
+
+
