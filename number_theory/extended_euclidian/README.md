@@ -43,7 +43,7 @@ Note that the EEA gives a pair of `s` and `t` which is minimal in absolute value
 ## Linear Diophantine Equation
 Linear **Diophantine** Equation is an equatuion if form <img src="https://render.githubusercontent.com/render/math?math=\sum a_ix_i = c">,
 where the <img src="https://render.githubusercontent.com/render/math?math=x_i"> are unknown. These equations only have a **solution if**,
-the **Greates Common Devisor** <img src="https://render.githubusercontent.com/render/math?math=\text{GCD}(x_1,\ldots, x_n) = g "> **divides c**. If indeed <img src="https://render.githubusercontent.com/render/math?math=g|c">, then there are infinite solutions.
+the **Greates Common Devisor** <img src="https://render.githubusercontent.com/render/math?math=\text{GCD}(x_1,\ldots, x_n) = g "> **divides c**. If indeed <img src="https://render.githubusercontent.com/render/math?math=g|c">, then there are **infinite solutions**.
 
 ### Two Variables with Restrictions
 
