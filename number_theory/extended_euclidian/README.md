@@ -43,7 +43,7 @@ Note that the EEA gives a pair of `s` and `t` which is minimal in absolute value
 ## Linear Diophantine Equation
 Linear Diophantine Equation is an equatuion if form <img src="https://render.githubusercontent.com/render/math?math=\sum a_ix_i = c">,
 where the <img src="https://render.githubusercontent.com/render/math?math=x_i"> are unknown.
-The specific Linear Diophantine Equation of only 2 variables <img src="https://render.githubusercontent.com/render/math?math=a_1x_1 %2B a_2b_2  = c">
+The specific Linear Diophantine Equation of only 2 variables <img src="https://render.githubusercontent.com/render/math?math=a_1x_1 %2B a_2x_2  = c">
 can be solved with the help of the Extended Euclidean Algorithm (EEA):
 
 1. Use EEA to get Bézout's coefficients `s`, `t` and GCD `d` in <img src="https://render.githubusercontent.com/render/math?math=a_1s %2B a_2t = d">
