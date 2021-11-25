@@ -51,6 +51,12 @@ Note:
 [comb1 and comb2
 ](https://github.com/dirkneuhaeuser/algorithms/blob/master/templates/combinatorics.cpp)
 * **Combinations to put r elements in k bins**: <img src="https://render.githubusercontent.com/render/math?math=\binom{r %2B k-1}{r}">. To see that, create bijection: separate bins with k-1 stripes "|" (here k=4) and now calculate how many possibiliters there are, to put r dots: <img width="126" alt="Screenshot 2021-05-04 at 03 10 23" src="https://user-images.githubusercontent.com/44442845/126899072-42140c0b-4880-4b5b-bcdb-2934fd517969.png">
+* The **Power-set**. The number of subsets of set with k elements (including the empty set): <img src="https://render.githubusercontent.com/render/math?math=2^k">
+* **The number of subsets with only even elements** of a set with k elements is <img src="https://render.githubusercontent.com/render/math?math=2^{k-1}">. Intuition: Half of the subsets have eben number of elements, the other half odds number of elements. </br>
+Proof with Pascal's Formula: </br>
+Number of Subsets with even number of elements:
+<img src="https://render.githubusercontent.com/render/math?math=\sum_{k=0}^{n/2}\binom{n}{2k} = \sum_{k=0}^{n/2} (\binom{n-1}{2k-1} %2B \binom{n-1}{2k}) = \sum_{k=0}^{n-1} (\binom{n-1}{k}">. </br>
+You get the same result when only considering subsets with odd elements. Thus they divide perfectly.
 
 # Multinomial Coefficient
 
