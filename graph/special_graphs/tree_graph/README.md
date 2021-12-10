@@ -32,7 +32,7 @@ for(int j=1; j<=LOG; ++j){
 ```
 
 With that, the idea of the LCA computation remains the same: First bring both nodes to the same level (via binary lifting) and then move both nodes up as 
-much as possible while such that both nodes are not even. At the end of this routine, both nodes will be the direct children of the LCA:
+much as possible while such that both nodes are not even. At the end of this routine, **both nodes will be the direct children of the LCA**:
 ```
 int getLCA(int a, int b){
     if(depth[a] < depth[b]){
