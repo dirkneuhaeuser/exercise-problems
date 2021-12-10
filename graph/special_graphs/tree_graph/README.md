@@ -10,7 +10,7 @@ The **Diameter** of a (weighted) tree, is the longest shortest path between any 
 via Floyd-Warshall in <img src="https://render.githubusercontent.com/render/math?math=O(n^3)">, in trees it can be done in <img src="https://render.githubusercontent.com/render/math?math=O(n)">. The idea is to pick any random node `r`, from there go the furthest node `fst` of `r` and repeat 
 that to find the furthest node `snd` from `fst`. The distance between `snd` and `fst` is the longest distance.
 
-The diameter has either one center node, or the center lies on an edge. Either way, the center is defined to be on the half of the diameter (**radius**). 
+The diameter has either one **center node**, or the center lies on an edge. Either way, the center is defined to be on the half of the diameter (**radius**). 
 
 ### LCA and Binary Lifting
 Given two nodes u and v, the **Least Common Ancestor** (LCA) is the first node, that lie on both pathes to the root, from u and also from v.
