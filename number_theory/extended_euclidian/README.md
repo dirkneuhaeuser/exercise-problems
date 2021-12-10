@@ -41,10 +41,14 @@ int eea(int a, int n, int &s, int &t){
 Note that the EEA gives a pair of `s` and `t` which is minimal in absolute values.
 
 ## Linear Diophantine Equation
-Linear Diophantine Equation is an equatuion if form <img src="https://render.githubusercontent.com/render/math?math=\sum a_ix_i = c">,
-where the <img src="https://render.githubusercontent.com/render/math?math=x_i"> are unknown.
-The specific Linear Diophantine Equation of only 2 variables <img src="https://render.githubusercontent.com/render/math?math=a_1x_1 %2B a_2b_2  = c">
-can be solved with the help of the Extended Euclidean Algorithm (EEA):
+Linear **Diophantine** Equation is an equatuion if form <img src="https://render.githubusercontent.com/render/math?math=\sum a_ix_i = c">,
+where the <img src="https://render.githubusercontent.com/render/math?math=x_i"> are unknown. These equations only have a **solution if**,
+the **Greates Common Devisor** <img src="https://render.githubusercontent.com/render/math?math=\text{GCD}(x_1,\ldots, x_n) = g "> **divides c**. If indeed <img src="https://render.githubusercontent.com/render/math?math=g|c">, then there are **infinite solutions**.
+
+### Two Variables with Restrictions
+
+Like described before, a linear Diophantine Equation of only 2 variables <img src="https://render.githubusercontent.com/render/math?math=a_1x_1 %2B a_2x_2  = c"> has either 0 solutions, if the GCD g does not divide c, or **infinite solutions** if it does. Therefore, we need further **restrictions** to **reduce the search space**.
+If that is available, we can:
 
 1. Use EEA to get Bézout's coefficients `s`, `t` and GCD `d` in <img src="https://render.githubusercontent.com/render/math?math=a_1s %2B a_2t = d">
 2. Check if d|c. If not, there is no solution. Otherwise, there are infinite solutions. <br/>
