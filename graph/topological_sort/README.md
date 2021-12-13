@@ -1,4 +1,4 @@
-## Toplogical Sort
+## Topplogical Sort
 
 **Topological sort** allows for sorting a list according to its dependencies (dependencies first). This only works on **DAG**'s.
 We need an adjacency-list `AL[v] = [..u..]` which means that `v` comes before all elments `u` in the topological order.
