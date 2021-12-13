@@ -1,8 +1,8 @@
 ## Strongly Connected Components
-On an undirected graph, the connected components can be found with an easy dfs. When the graph is **directed** however, we call a strongly connected component (SSC)
-a subset of the vertexes in the graph, within each vertex can reach each other vertex in the same SSC. **Tarjan's algorithm** runs in <img src="https://render.githubusercontent.com/render/math?math=O(V %2B E)"> and assigns each node to its SSC-root; the same root marks the same SSC.
+On an undirected graph, the connected components can be found with an easy DFS. When the graph is **directed** however, we call a **strongly connected component** (SSC)
+a subset of the vertexes in the graph, within each vertex can reach each of the other vertex in the same SSC. **Tarjan's algorithm** runs in <img src="https://render.githubusercontent.com/render/math?math=O(V %2B E)"> and assigns each node to its **SSC-root**; the same root marks the same SSC.
 
-The main idea is that there is root node (start node) for each SSC. For this root holds, that it coudn't make its `dfs_low` value smaller than `dfs_num`. 
+The main idea is that there is a single root node (start node) for each SSC. For this root holds that it coudn't make its `dfs_low` value smaller than `dfs_num`. 
 All the nodes afterwars are part of this SCC (unless have been put to a different SSC already - saved in `visited`).
 
 ```
@@ -17,7 +17,7 @@ void tarjan(int cur, vector<vector<int>> &AL){ // O(V + E)
         if(dfs_num[next] == UNVISITED){
             tarjan(next, AL);
         }
-        if(visited[next] == 1){
+        if(visited[next] == 1){ // not part of other SSC -> same SSC
             dfs_low[cur] = min(dfs_low[next], dfs_low[cur]); // if it is not yet completed;
         }
     }
@@ -46,7 +46,7 @@ FOR(i, n){
 }
 ```
 ### When to use
-- Often, a task is to reduce all SSC to single node and
+- Often, a task is to **reduce all SSC to single node **and
 afterwards check for some critera (e.g. count all `in_degree == 0` nodes). Questions like **how many dominos you need to push?**.
 - Given a directed Graph G, **how many edges do you need to add, to make it a SCC?**
    1. Reduce all SSC in G to a single node -> G is now DAG

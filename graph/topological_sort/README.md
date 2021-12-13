@@ -1,26 +1,9 @@
-## Toplogical Sort
+## Topplogical Sort
 
-Topological sort allows for sorting a list according to its dependencies (dependencies first).
-Therefore we need an adjacency-list `a[v] = [..u..]` which means that 'v' comes befor all elments 'u' in the topological order.
-Both algorithm run in <img src="https://render.githubusercontent.com/render/math?math=O( V %2B E)">. When using the more flexible Kahn algorithm together with a priority queue the complexity will be <img src="https://render.githubusercontent.com/render/math?math=O(V \log V %2B E)">
+**Topological sort** allows for sorting a list according to its dependencies (dependencies first). This only works on **DAG**'s.
+We need an adjacency-list `AL[v] = [..u..]` which means that `v` comes before all elments `u` in the topological order.
+Both algorithm run in <img src="https://render.githubusercontent.com/render/math?math=O( V %2B E)">. When using the **more flexible Kahn **algorithm together with a priority queue the complexity will be <img src="https://render.githubusercontent.com/render/math?math=O(V \log V %2B E)">
 
-### DFS Variant (post-order)
-```
-void topsort(int u, vector<int> &vis, vector<int> &order){
-  vis[u] = VISITED;
-  for(int next: al[u]){
-    if(vis[next] == UNVISITED){
-      topsort(next, vis, order);
-    }
-  }
-  order.push_back(u);
-}
-// in main
-for(int i=0; i<n; ++i){
-  topsort(i, vis, order);
-}
-```
-Here the `order` vector only needs to be **reversed** to contain the correct topological-order.
 
 ### Kahn Algorithm
 The Kahn algorithm looks at the **in-degree** of each node `v`. If it is zero then this means, that no element needs to be before `v` and we can go ahead with it.
@@ -36,10 +19,30 @@ for(int i=0; i<n; ++i){
 while(pq.size()){
   int cur = pq.top(); pq.pop();
   order.push_back(cur);
-  for(int next: al[cur]){
+  for(int next: AL[cur]){
     if(--in_degree[next] == 0){
       pq.push(next);
     }
   }
 }
 ```
+
+### DFS Variant (post-order)
+```
+void topsort(int u, vector<int> &vis, vector<int> &order){
+  vis[u] = VISITED;
+  for(int next: AL[u]){
+    if(vis[next] == UNVISITED){
+      topsort(next, vis, order);
+    }
+  }
+  order.push_back(u);
+}
+// in main
+for(int i=0; i<n; ++i){
+  topsort(i, vis, order);
+}
+```
+Here the `order` vector only needs to be **reversed** to contain the correct topological-order.
+
+

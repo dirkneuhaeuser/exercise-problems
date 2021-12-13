@@ -1,25 +1,25 @@
 ## Tree Graphs
 
-A tree-graph of n nodes has n-1 edges and each node is directly or indirectly connected to any other node. 
+A tree-graph of `n` nodes has `n-1` edges and each node is directly or indirectly connected to any other node. 
 Trees have some interesting properties:
 
 
 
 ### Diameter/Radius/Center
-The **Diameter** of a (weighted) tree, is the longest shortest path between any two nodes. While the computation of longest shortest path in normal graph can be obtained
+The **Diameter** of a (weighted) tree, is the **longest shortest path between any two nodes**. While the computation of longest shortest path in normal graph can be obtained
 via Floyd-Warshall in <img src="https://render.githubusercontent.com/render/math?math=O(n^3)">, in trees it can be done in <img src="https://render.githubusercontent.com/render/math?math=O(n)">. The idea is to pick any random node `r`, from there go the furthest node `fst` of `r` and repeat 
-that to find the furthest node `snd` from `fst`. The distance between `snd` and `fst` is the longest distance.
+that to find the furthest node `snd` from `fst`. The distance between `fst` and `snd` is the longest distance.
 
 The diameter has either one **center node**, or the center lies on an edge. Either way, the center is defined to be on the half of the diameter (**radius**). 
 
 ### LCA and Binary Lifting
-Given two nodes u and v, the **Least Common Ancestor** (LCA) is the first node, that lie on both pathes to the root, from u and also from v.
+Given two nodes `u` and `v`, the **Least Common Ancestor** (LCA) is the first node, that lie on both paths to the root, from `u` and also from `v`.
 The <img src="https://render.githubusercontent.com/render/math?math=O(n)"> idea would be to precalculate the depth for each node in <img src="https://render.githubusercontent.com/render/math?math=O(n)">
-and then to **bring u and v to the same depth** linearly. 
-From there always go up to the root linearly, until both nodes are equal. However, when there are many queries, 
+and then to **bring** `u` and `v` to the **same depth** linearly. 
+From there always go up to the root linearly <img src="https://render.githubusercontent.com/render/math?math=O(n)">, until both nodes are equal. However, when there are many queries, 
 we can improve that to <img src="https://render.githubusercontent.com/render/math?math=O(\log(n))"> by utilising a <img src="https://render.githubusercontent.com/render/math?math=O(n \log(n))"> proprocessing, called **Binary Lifting**.
-Therefore we define `up[u][i]` to be that node, that is <img src="https://render.githubusercontent.com/render/math?math=2^i"> higher than node u. That means, that `up[u][0]`(1 up) is the direct parent and `up[u][1]`(2 up) 
-is the grandparent. Next `up[u][2]` would be 4 up and so on. By using this binary expansion, we can get to any arbitrary height.
+Therefore we define `up[u][i]` to be that node, that is <img src="https://render.githubusercontent.com/render/math?math=2^i"> higher than node `u`, i.e. that `up[u][0]`(1 up) is the direct parent and `up[u][1]`(2 up) 
+is the grandparent. Next, `up[u][2]` would be 4 up and so on. By using this binary expansion, we can get to any arbitrary height.
 
 **Binary Lifting**:
 ```
