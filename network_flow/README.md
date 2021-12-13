@@ -17,25 +17,26 @@ then the forward edge has +flow, and its corresponding residual edge -flow</br>
 
 ## Maxflow Algorithms
 
-1. Ford-Fulerson Method O(Maxflow * E): A potential bottleneck with capacity of 1 is used all the time (back and forth with forward and residual graph)
-2. Edmonds-Karp Algorithm O(V * E^2)
-3. **Dinic’s Algorithm** O(V^2 * E)
-4. Push-Relabel Algorithm O(V^3), on dense graphs theoretically faster than Dinic, but Dinic is good enough for all Network problems.
+
+1. Ford-Fulerson Method <img src="https://render.githubusercontent.com/render/math?math=O(\text{Maxflow} \cdot E)">: A potential bottleneck with capacity of 1 is used all the time (back and forth with forward and residual graph)
+2. Edmonds-Karp Algorithm <img src="https://render.githubusercontent.com/render/math?math=O(V E^2)">
+3. **Dinic’s Algorithm** <img src="https://render.githubusercontent.com/render/math?math=O(V^2 E)">
+4. Push-Relabel Algorithm <img src="https://render.githubusercontent.com/render/math?math=O(V^3)">, on dense graphs theoretically faster than Dinic, but Dinic is good enough for all Network problems.
 
 
 Algorithm Edmonds-Karp and Dinic
 Run BFS to create level graph:
-  - The L-level Graph stops after L iterations
+  - The **L-level Graph** stops after L iterations
   - The Edmonds-Karp algorithm: uses this graph to only augment one s-t path (if found)
-  - The Dinic algorithm: sends a blocking flow, to augment all possible s-t paths
+  - The Dinic algorithm: sends a** blocking flow**, to augment all possible s-t paths
 
 Problems to solve with Network-Flow
-Often Problem are disguised and the difficulty is to see the max-flow behind it and model it accordingly
+Often Problem are disguised and the difficulty is to s**ee the max-flow behind it and model it accordingly**
 
 ## When to use
 1. Normal **MaxFlow** problems (check max bandwith)
 2. Unweighted Maximum Cardinality Bipartite Matching (**MCBM**, The easiest kind of matching)
-   1. It can be shown that on bipartite Graphs, the algorithm has only <img src="https://render.githubusercontent.com/render/math?math=O(\sqrt{V})"> phases,
+   1. It can be shown that on **bipartite Graphs**, the algorithm has only <img src="https://render.githubusercontent.com/render/math?math=O(\sqrt{V})"> phases,
       thus comes with a complexity <img src="https://render.githubusercontent.com/render/math?math=O(\sqrt{V} E)">
 4. **Assignment Problem** </br>
    Example: Emeis are thirsty between a and b, but at time x only 2 emeis can drink at a lake. Assign emeis to the lake.
