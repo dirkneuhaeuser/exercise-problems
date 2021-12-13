@@ -1,5 +1,5 @@
 ## Minimum Spanning Tree (MST)
-There are two well known algorithms for the MST, the **Krusal**, which uses the **disjoint-set datastructure**, and the **prime** algorithm, which works similarly to
+There are two well known algorithms for the MST, **Krusal**, which uses the **disjoint-set datastructure**, and **prim's** algorithm, which works similarly to
 dijkstra's SSSP. 
 The difference is that dijsktra looks at nodes and minimises the distance from a given starting node to it,
 while prime just takes the next lowes edge which endpoint has not been seen yet. Both algorithm work in
@@ -73,10 +73,10 @@ while(pq.size()){
 Per default use DJS
 - Minimum/Maximum Spanning Tree
 - Minimum Spanning **Subgraph** (part of the edges are already given)
-- **Minimum Spanning Forrest** (stop when djs.forrests == k)
+- **Minimum Spanning Forrest** (stop when `djs.forrests == k`)
 - **MiniMax** (Connect all nodes and try to minimise the maximum edge weight used for that). Vice verca for MaxiMin. The result is given just by the MST
 - **Second Best Spanning Tree**. (run normal MST, then you have n edges.
   For each of theses edges run MST again and don't include it) O(sorting + MST + Second Best MST) = <img src="https://render.githubusercontent.com/render/math?math=O(E log E %2B E %2B VE)">.
   Alternatively if E is huge, calculate the MST and get the minimal cost. Then for each v run a dfs and get the maximum distance between any two nodes in <img src="https://render.githubusercontent.com/render/math?math=O(V^2)">. 
-  Not just pass though all edges which are not part of the MST. Add its cost and subtract the maximum distance between the two nodes within the orginal MST (See kattis spider).
+  Now just pass though all edges which are not part of the MST. Add its weight and subtract the maximum distance between these two nodes within the orginal MST (See kattis spider).
 - When there are **several starting points**, use **Prim**'s Algorithm (aksed for optimal forrests here)
