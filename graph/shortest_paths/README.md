@@ -1,8 +1,8 @@
 ## Shortest Paths
 
-When the edges are not weighter we can use a **bfs** for the shortes paths, othrweise **Dijkstra**'s algorithm.
+When the edges are not weighter we can use a **BFS** for the shortes paths, othrweise **Dijkstra**'s algorithm.
 Dijkstra uses the same idea of a BFS, but instead of a normal queue, it uses a **priority queue to favour nodes with a smaller distance**.
-Often when problem appear to be a **DP problem**, but are **not** defined on a **DAG**, then most certainly these are BFS problems.
+Often when a problem appears to be a **DP problem**, but are **not** defined on a **DAG**, then most certainly these are BFS problems.
 
 **Typic Examples**:
 
@@ -40,8 +40,8 @@ Note:
 
 ### Weigthed SSSP (no negative cycles) - Dijkstra
 
-If the edges are weighted, e.g. we want to minimise the time to go from a to b, we need to use a `priority_queue` instead of a normal `queue`, as the main idea is to always use the cell/node with the current lowest cost/time. This node cannot improved any further, but maybe can be used to improve others.
-Unfortunately, the `priority_queue` in c++ doesn't allowe to update keys, therefore we use `set` here. The complexity is <img src="https://render.githubusercontent.com/render/math?math=O((V %2B E) \log V)">.
+If the edges are **weighted**, e.g. we want to minimise the time to go from a to b, we need to use a `priority_queue` instead of a normal `queue`, as the main idea is to always use the cell/node with the current lowest cost/time. This node cannot improved any further, but maybe can be used to improve others.
+Unfortunately, the `priority_queue` in c++ doesn't allowe to **update keys**, therefore we use `set` here. The complexity is <img src="https://render.githubusercontent.com/render/math?math=O((V %2B E) \log V)">.
 
 Note Dijkstra does not work, when there is a negative cycle.
 
@@ -75,12 +75,12 @@ vector<ll> dijkstra(ll start, vector<vector<pll>> &AL){ // O(E * log(V))
 
 Notes:
 1. For **reconstruction** of a single shortest path use a **parent vector** and whenever you can update the next element, update also the parent (Works for bfs/dijkstra).
-2. To know wheter an **edge/node is part of one of the shortest paths**: Apply weighted/unweighted from begining and again from end (reversed AL).
+2. To know wheter an **edge/node is part of any possible shortest path**: Apply weighted/unweighted from begining and again from end (reversed AL).
 A node is part of a shortest path if `dist[node] + distRev[node] == dist[endNode]`, analogously an edge is part of a shortest path if both connected nodes are part of the shortest path + the difference in between both `dist` values is the weight of the edge `w`.
 3. When there are some further monoton restrictions, apply them during the for-loop inside Dijkstra.
 
 ### Weigthed SSSP with negative Cycle - Bellmann-Ford
-When there are negative Cycles then Dijkstra would run forever without stopping. **Bellmann-Ford** alleviates this issue by running the **exact amount** of **iterations** needed to calculate the shortest path from the rooot to any other node, assuming there are no negative cycles. To check if there is a negative cycle, another single iteration can be made. If any weight improves, then there is a negative cycle. The algorithm runs in <img src="https://render.githubusercontent.com/render/math?math=O(V^3)"> and therfore requires a `V <= 450`.
+When there are **negative cycles** then Dijkstra would run forever without stopping. **Bellmann-Ford** alleviates this issue by running the **exact amount** of **iterations** needed to calculate the shortest path from the rooot to any other node, assuming there are no negative cycles. To check if there is a negative cycle, another single iteration can be made. If any weight improves, then there is a negative cycle. The algorithm runs in <img src="https://render.githubusercontent.com/render/math?math=O(V^3)"> and therfore requires a `V <= 450`.
 
 ```
 vector<int> bellmann_ford(int start, vector<vector<pii>> &AL){ // O(V^3)
@@ -146,7 +146,7 @@ Note:
 - Bellmann-Ford sometimes come also with further **restrictions**, which then need to be incorporated into the <img src="https://render.githubusercontent.com/render/math?math=O(V^3)"> loop.
 
 ### APSP - Floyd-Warshall
-Instead of computing the shortest path from a single source node, sometimes it is required to have the shortest distance between all pairs of nodes.
+Instead of computing the shortest path from a single source node, sometimes it is required to have the **shortest distance between all pairs of nodes**.
 Floyed-Warshall computes All-Pairs-Shortest-Paths in <img src="https://render.githubusercontent.com/render/math?math=O(V^3)"> in a dp-fashion by trying to find smaller detours from i to j over k:
 ```
 
