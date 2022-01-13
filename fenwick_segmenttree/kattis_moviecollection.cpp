@@ -69,30 +69,26 @@ struct cmp1 {
 void solve() 
 {
     // problem: https://open.kattis.com/problems/moviecollection
-    // about: order statics tree problem
+    // about: The easy way to solve this porblem ist with an Order Statistic Tree (ost). For each movie id, we save its postion into the ost, when we remove and readd it on top, we will use -i as new positon to ensure, it will have the lowest order (on top of the stack). Alternatively, we could use a fenwick tree, but with reversed order (readding on top of stack == adding to the right) then the RSQ to index i will give us the number of items below that dvd on the sack.
     int NINF = 1 << 31;
     int n, q; cin >> n >> q;
-    set<pii, cmp1> idPos;
-    ordered_multiset<pii> om;
+    //set<pii, cmp1> idPos;
+    map<int, int> idPos;
+    ordered_multiset<int> ost;
     FOR(i, n){
-        idPos.insert({i+1,i+1});
-        om.insert({i+1,i+1});
+        idPos[i+1] = i+1;
+        ost.insert(i+1);
     }
     auto t = idPos.begin();
     FOR(i, q){
         int r; cin >> r; 
-        pii search = {NINF,r};
-        auto it = idPos.lower_bound(search);
-        pii real = *it;
-        int ans =om.order_of_key(real);
+        int pos = idPos[r];
+        int ans = ost.order_of_key(pos);
         cout << ans << " ";
 
-        om.erase(real);
-        idPos.erase(real);
-        real.first = -i;
-
-        idPos.insert(real);
-        om.insert(real);
+        ost.erase(pos);
+        idPos[r] = -i ;
+        ost.insert(-i);
     }
 
 }
