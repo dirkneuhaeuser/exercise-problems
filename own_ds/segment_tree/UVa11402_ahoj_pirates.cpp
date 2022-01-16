@@ -98,7 +98,6 @@ private:
 
 
     void update(ll p, ll L, ll R, ll i, ll j, ll op){ // O(logn)
-        if(i>j)return; // will capture the case if you only look in the left subtree, but right gets also called
         propagate(p, L, R);
         if( L > j || i > R ) return ;
         if(L>=i && R<=j){  // goal: narrow L and R down, s.t. the intervall of this node captured. == would be sufficient
@@ -128,7 +127,6 @@ private:
 
     ll query(ll p, ll L, ll R, ll i, ll j){ // O(logn)
         propagate(p, L, R);
-        if(i>j)return INVALID; // invalid subtree(with no coverage)
         if(R < i || L > j) return 0;
         if(i<=L && j>=R){ // with == would be sufficent
             return st[p];

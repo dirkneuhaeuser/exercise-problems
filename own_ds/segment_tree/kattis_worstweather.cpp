@@ -58,7 +58,7 @@ private:
         }
     }
     ll query(ll p, ll L, ll R, ll i, ll j){ // O(logn)
-        if(i>j)return NEUTRAL; // invalid subtree(with no coverage)
+        //if(i>j)return NEUTRAL; // invalid subtree(with no coverage)
         if(L > j || R < i) return NEUTRAL;
         if(i<=L && j>=R){ // with == would be sufficent
             return st[p];
