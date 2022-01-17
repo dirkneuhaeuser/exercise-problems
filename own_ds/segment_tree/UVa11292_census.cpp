@@ -52,7 +52,7 @@ private:
         }
     }
 
-    // Second-Dimension: O(m) as O(1+2+4+..+ 2**log m) = O(2m)
+    // Second-Dimension: O(m) as O(1+2+4+..+ 2^log m) = O(2m)
     void build_y(ll px, ll Lx, ll Rx, ll py, ll Ly, ll Ry){
         // 2nd stage
         if (Ly == Ry){
