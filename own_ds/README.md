@@ -2,16 +2,22 @@
 Often it is sufficient to use BIT, but if the operation is not inversable like max or min, or when the states are a bit more complicated then we can still use a ST. A ST uses slightly more memory, and implementationwise a bit more sophisicated.
 With Lazy Propagation we can go for efficient (log n) range updates as well.
 
-### 2D ST
-When we have 2 Dimensions and each node of the first dimension contains another ST. The implementaion is a bit tedious and also we cannot use lazy propagation thus only have point-updates at our disposal
 
 
 ## BIT or Fenwick-Tree
 Very good for point update and range queries (PURQ), operation needs to be inversable (sum). Can be used for orders, but often OST is better.
 Some more sophiscated variants allow also for range update and point queries (RUPQ) as well as range update and range queries (RURQ)
 
+## 2D Data
+
 ### 2D BIT
 2D Bit allows for point update and range queries (PURQ) and is implemented quickly.
+
+### 2D ST
+When we have 2 Dimensions and each node of the first dimension contains another ST. The implementaion is a bit tedious and also we cannot use lazy propagation thus only have point-updates at our disposal
+
+### Quadtree
+A quadtree is a tree, in which each inner node has 4 children. This helps to divide the 2D-grid recursively into north-east, north-west, south-easth and south-west, such that each node can dicide what to do with values of its children. Note that the runtime of the quadtree is worse than of a 2D-Segmenttree. Proof by Mastertheorem.
 
 ## Order Statistic Tree
 Order Statistic Tree (OST) is a balanced BST, which also saves the size of each subtree. 
