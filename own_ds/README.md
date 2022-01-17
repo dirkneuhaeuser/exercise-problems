@@ -1,3 +1,5 @@
+Often n numbers, and q queries of 2 types. For the frist type we need to calculate the product/sum or sth else of a given range and for the second we need to change the some range/point of our initial numbers.
+
 ## ST
 Often it is sufficient to use BIT, but if the operation is not inversable like max or min, or when the states are a bit more complicated then we can still use a ST. A ST uses slightly more memory, and implementationwise a bit more sophisicated.
 With Lazy Propagation we can go for efficient (log n) range updates as well.
