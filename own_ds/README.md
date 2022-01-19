@@ -1,4 +1,7 @@
-Often n numbers, and q queries of 2 types. For the frist type we need to calculate the product/sum or sth else of a given range and for the second we need to change the some range/point of our initial numbers.
+Often n numbers, and q queries of 2 types. 
+For the first type, we need to change the some range/point of our initial numbers. `update(idx, val)`. </br>
+For the second type, we need to calculate the sum of a given range `query(idxLeft, idxRight)`. Note any associative function can be used instad of the sum-operation, e.g. minimum, maximum, multiplication (also modulo), matrix-multiplication (associative but not commutative), bitwise operations (`&`, `|`, `^`) or GCD (which doesn't run in O(1), so it will change the overall complexity).
+
 
 ## ST
 Often it is sufficient to use BIT, but if the operation is not inversable like max or min, or when the states are a bit more complicated then we can still use a ST. A ST uses slightly more memory, and implementationwise a bit more sophisicated.
