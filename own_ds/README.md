@@ -7,6 +7,25 @@ For the second type, we need to calculate the sum of a given range `query(idxLef
 Often it is sufficient to use BIT, but if the operation is not inversable like max or min, or when the states are a bit more complicated then we can still use a ST. A ST uses slightly more memory, and implementationwise a bit more sophisicated.
 With Lazy Propagation we can go for efficient (log n) range updates as well.
 
+When the states are more complicated it is useful to implement a `struct Node`. This also allows for defining `operator +`, such that we don't need to do this within our conq function inside the segment-tree. An example of how to implement a node to get the minimum and also the count of all the elements having this min is defined below:
+```
+struct Node{
+    ll minN, cnt;
+    Node(){
+        minN = INF;
+        cnt = 1;
+    }
+    Node operator+(const Node &o) const{
+        if(minN > o.minN) return o;
+        if(minN < o.minN) return *this;
+        Node ret;
+        ret.minN = minN;
+        ret.cnt = cnt + o.cnt;
+        return ret;
+    }
+};
+```
+
 
 
 ## BIT or Fenwick-Tree
