@@ -1,17 +1,47 @@
+Often n numbers, and q queries of 2 types. 
+For the first type, we need to change the some range/point of our initial numbers. `update(idx, val)`. </br>
+For the second type, we need to calculate the sum of a given range `query(idxLeft, idxRight)`. Note any associative function can be used instad of the sum-operation, e.g. minimum, maximum, multiplication (also modulo), matrix-multiplication (associative but not commutative), bitwise operations (`&`, `|`, `^`) or GCD (which doesn't run in O(1), so it will change the overall complexity).
+
+
 ## ST
 Often it is sufficient to use BIT, but if the operation is not inversable like max or min, or when the states are a bit more complicated then we can still use a ST. A ST uses slightly more memory, and implementationwise a bit more sophisicated.
 With Lazy Propagation we can go for efficient (log n) range updates as well.
 
-### 2D ST
-When we have 2 Dimensions and each node of the first dimension contains another ST. The implementaion is a bit tedious and also we cannot use lazy propagation thus only have point-updates at our disposal
+When the states are more complicated it is useful to implement a `struct Node`. This also allows for defining `operator +`, such that we don't need to do this within our conq function inside the segment-tree. An example of how to implement a node to get the minimum and also the count of all the elements having this min is defined below:
+```
+struct Node{
+    ll minN, cnt;
+    Node(){
+        minN = INF;
+        cnt = 1;
+    }
+    Node operator+(const Node &o) const{
+        if(minN > o.minN) return o;
+        if(minN < o.minN) return *this;
+        Node ret;
+        ret.minN = minN;
+        ret.cnt = cnt + o.cnt;
+        return ret;
+    }
+};
+```
+
 
 
 ## BIT or Fenwick-Tree
 Very good for point update and range queries (PURQ), operation needs to be inversable (sum). Can be used for orders, but often OST is better.
 Some more sophiscated variants allow also for range update and point queries (RUPQ) as well as range update and range queries (RURQ)
 
+## 2D Data
+
 ### 2D BIT
 2D Bit allows for point update and range queries (PURQ) and is implemented quickly.
+
+### 2D ST
+When we have 2 Dimensions and each node of the first dimension contains another ST. The implementaion is a bit tedious and also we cannot use lazy propagation thus only have point-updates at our disposal
+
+### Quadtree
+A quadtree is a tree, in which each inner node has 4 children. This helps to divide the 2D-grid recursively into north-east, north-west, south-easth and south-west, such that each node can dicide what to do with values of its children. Note that the runtime of the quadtree is worse than of a 2D-Segmenttree. Proof by Mastertheorem.
 
 ## Order Statistic Tree
 Order Statistic Tree (OST) is a balanced BST, which also saves the size of each subtree. 
