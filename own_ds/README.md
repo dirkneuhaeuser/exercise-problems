@@ -26,6 +26,8 @@ struct Node{
 };
 ```
 
+Otherwise define a value as INVALID, which doesn't occur, or take a neutral element. Also take into consideration, that for the lazy propagation to work, you need to merge the propagated operation from the mother to the child.
+
 
 
 ## BIT or Fenwick-Tree
