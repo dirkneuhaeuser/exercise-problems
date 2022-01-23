@@ -42,9 +42,13 @@ Distributive are: </br>
 \* (update) and + (query) </br>
 & and | </br>
 \+ and max/min </br>
+\:= and min </br>
 
-Not distribute is + on +, but we can still do it, if we are smart within propagation
 
+Not distribute are: </br>
+/+ and + </br>
+:= and + </br>
+but we can still do it, if we are smart within propagation
 
 
 ## BIT or Fenwick-Tree
