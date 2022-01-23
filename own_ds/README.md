@@ -26,9 +26,14 @@ struct Node{
 };
 ```
 
-Otherwise define a value as INVALID, which doesn't occur, or take a neutral element (sometimes not applicable, e.g. when assigning values to whole segments). Also take into consideration, that for the lazy propagation to work, you need to merge the propagated operation from the mother to the child.
+Otherwise define a value as INVALID, which doesn't occur, or take a neutral element (sometimes not applicable, e.g. when assigning values to whole segments). 
+### lazy propagation
 
-Note: If you don't user lazy-propagation, but instead leave the operation where applied and when querying going from root to your queried nodes, then these operations need to be commutative (the order shall not matter).
+Old operations are further down in the root tree, while new ones are up. Each time we visit a node, we propagate it furhter down. 
+Take into consideration, that for the lazy propagation to work, you might need to merge the propagated operation from the mother to the child.
+
+
+Note: If you don't use lazy-propagation, but instead leave the operation where applied and when querying going from root to your queried nodes, then these operations need to be commutative (the order shall not matter).
 
 To apply lazy-propagation, and stop at an inner node, the update function needs to distributive relative to the calc(query)function.
 E.g. when applying the operation \* with x, we don't need to recurse to the children, but instead just use their old intermediate values: query(a\*x, b\*x) = query(a, b) \* x.
