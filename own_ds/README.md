@@ -1,6 +1,6 @@
 Often n numbers, and q queries of 2 types. 
 For the first type, we need to change the some range/point of our initial numbers. `update(idx, val)`. </br>
-For the second type, we need to calculate the sum of a given range `query(idxLeft, idxRight)`. Note any associative function can be used instad of the sum-operation, e.g. minimum, maximum, multiplication (also modulo), matrix-multiplication (associative but not commutative), bitwise operations (`&`, `|`, `^`) or GCD (which doesn't run in O(1), so it will change the overall complexity).
+For the second type, we need to calculate the sum of a given range `query(idxLeft, idxRight)`. Note any associative function (the opertion is the same from left and from right) can be used instad of the sum-operation, e.g. minimum, maximum, multiplication (also modulo), matrix-multiplication (associative but not commutative), bitwise operations (`&`, `|`, `^`) or GCD (which doesn't run in O(1), so it will change the overall complexity).
 
 
 ## ST
@@ -26,6 +26,31 @@ struct Node{
 };
 ```
 
+Otherwise define a value as INVALID, which doesn't occur, or take a neutral element (sometimes not applicable, e.g. when assigning values to whole segments). 
+### lazy propagation
+
+Old operations are further down in the root tree, while new ones are up. Each time we visit a node, we propagate it furhter down. 
+Take into consideration, that for the lazy propagation to work, you might need to merge the propagated operation from the mother to the child.
+
+
+Note: If you don't use lazy-propagation, but instead leave the operation where applied and when querying going from root to your queried nodes, then these operations need to be commutative (the order shall not matter).
+
+To apply lazy-propagation, and stop at an inner node, the update function needs to distributive relative to the calc(query)function.
+E.g. when applying the operation \* with x, we don't need to recurse to the children, but instead just use their old intermediate values: query(a\*x, b\*x) = query(a, b) \* x.
+
+Distributive are: </br>
+\* (update) and + (query) </br>
+& and | </br>
+\+ and max/min </br>
+\:= and min </br>
+
+
+Not distribute are: </br>
+/+ and + </br>
+:= and + </br>
+but we can still do it, if we are smart within propagation
+
+Normal implementation works with `NEUTRAL_UPDATE` and `NEUTRAL_QUERY`. However some operation, like assignment do not have a neutral, then, we need a dummy, or a value out of range.
 
 
 ## BIT or Fenwick-Tree
