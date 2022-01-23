@@ -30,8 +30,16 @@ Otherwise define a value as INVALID, which doesn't occur, or take a neutral elem
 
 Note: If you don't user lazy-propagation, but instead leave the operation where applied and when querying going from root to your queried nodes, then these operations need to be commutative (the order shall not matter).
 
-To apply lazy-propagation, and stop at an inner node, the update function needs to distributive relative to the query function.
-E.g. when applying the operation * with x, we don't need to recurse to the children, but instead just use their old intermediate values: query(a*x, b*x) = query(a, b) * x
+To apply lazy-propagation, and stop at an inner node, the update function needs to distributive relative to the calc(query)function.
+E.g. when applying the operation \* with x, we don't need to recurse to the children, but instead just use their old intermediate values: query(a\*x, b\*x) = query(a, b) \* x.
+
+Distributive are: </br>
+\* (update) and + (query) </br>
+& and | </br>
+\+ and max/min </br>
+
+Not distribute is + on +, but we can still do it, if we are smart within propagation
+
 
 
 ## BIT or Fenwick-Tree
