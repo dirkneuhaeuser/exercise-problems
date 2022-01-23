@@ -26,7 +26,7 @@ struct Node{
 };
 ```
 
-Otherwise define a value as INVALID, which doesn't occur, or take a neutral element. Also take into consideration, that for the lazy propagation to work, you need to merge the propagated operation from the mother to the child.
+Otherwise define a value as INVALID, which doesn't occur, or take a neutral element (sometimes not applicable, e.g. when assigning values to whole segments). Also take into consideration, that for the lazy propagation to work, you need to merge the propagated operation from the mother to the child.
 
 
 
