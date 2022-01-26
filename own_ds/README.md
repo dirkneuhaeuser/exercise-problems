@@ -4,6 +4,8 @@ For the second type, we need to calculate the sum of a given range `query(idxLef
 
 
 ## ST
+
+// goal: narrow L and R down, s.t. the intervall of this node captured.
 Often it is sufficient to use BIT, but if the operation is not inversable like max or min, or when the states are a bit more complicated then we can still use a ST. A ST uses slightly more memory, and implementationwise a bit more sophisicated.
 With Lazy Propagation we can go for efficient (log n) range updates as well.
 
