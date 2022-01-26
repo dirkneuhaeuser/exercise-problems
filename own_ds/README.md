@@ -52,6 +52,8 @@ but we can still do it, if we are smart within propagation
 
 Normal implementation works with `NEUTRAL_UPDATE` and `NEUTRAL_QUERY`. However some operation, like assignment do not have a neutral, then, we need a dummy, or a value out of range.
 
+Possibility of SparseSegment-Trees
+
 
 ## BIT or Fenwick-Tree
 Very good for point update and range queries (PURQ), operation needs to be inversable (sum). Can be used for orders, but often OST is better.
