@@ -1,6 +1,80 @@
+## Dynammic Datastructures
+
+Until now, we have mainly seen static problems, so for example given an array of numbers, we need a quick way to calculate the sum from the index `i` to index `j` (prefix sum). When dealing with dynammic data, i. e. data which is modified continuously, we want to avoid to linearly recalculate the array.
+
+### Binary-Index-Tree (BIT) or Fenwick-Tree
+<img align="right" width="640" alt="Fenwick-Tree(https://ioinformatics.org/journal/v9_2015_39_44.pdf)" src="https://user-images.githubusercontent.com/44442845/151425400-974740f4-9141-4f2f-9a8c-3eadbb20840a.png">
+
+A quick datastructure and in particular good for point update and range queries (PURQ). As a requirement, the operation needs to be inversable (sum): `range_query_from_left(j) - range_query_from_left(i-1);`. Given an array of length `n`, our datastructure has `n+1` nodes (0 is dummy variable) and each node `i` saves the result for the segment `[(i-LSOne(i) + 1),...,i]`. The building of the array needs <img src="https://render.githubusercontent.com/render/math?math=O(n \log n)">, and each update or sum query  <img src="https://render.githubusercontent.com/render/math?math=O(\log n)">.
+
+
+```
+
+// Least secnificant bit
+#define LSOne(S) ((S) & -(S))
+
+
+class PURQ {
+private:
+    vector<long long> ft;
+public:
+    PURQ(int n) { // without leading 0
+        ft.assign(n+1, 0); // idx 0 is bound, no value asigned to it
+    }
+    PURQ(vi &vals){
+        build(vals);
+    }
+    // builds in O(n), as oposed to O(n*logn)
+    void build(vector<long long> vals){ // vals idx are keys of Fenwick-tree -> first in vector needs to be 0:
+        int n = vals.size();
+        ft.assign(n, 0);
+        for(int i=0;i<n; i++){
+            ft[i] += vals[i];
+            if(i+LSOne(i)<n){
+                ft[i+LSOne(i)] += ft[i];
+            }
+        }
+    }
+    // 1-based index
+    long long range_query_from_left(int j){ // interval [1,...,j]
+        assert(j>=0 && j < ft.size());
+        long long ret = 0;
+        while(j!=0){
+            ret += ft[j];
+            j-=LSOne(j);
+        }
+        return ret;
+    }
+    // 1-based index
+    long long range_query(int i, int j){ // interval [i,...,j]
+        assert(j>=i && j < ft.size());
+        assert(i>=0 && i < ft.size());
+        return range_query_from_left(j) - range_query_from_left(i-1);
+    }
+    // 1-based index
+    void point_update(int i, int val){
+        assert(i>0 && i < ft.size());
+        while(i < ft.size()){
+            ft[i]+=val;
+            i += LSOne(i);
+        }
+    }
+};
+
+//vector<long long> test{0,1,1};
+//PURQ fw = PURQ(test); 
+//fw.range_query(1, 2);
+
+```
+
+Also note, that this data-structure also supports, Range-Updates with Point-Queries (RUPQ) as well as Range-Updates with Range-Queries (RURQ). The implementation is [here](https://github.com/dirkneuhaeuser/algorithms/blob/master/templates/fenwick.cpp). Moreover, we can also use it, for [2D-grids]([here](https://github.com/dirkneuhaeuser/algorithms/blob/master/templates/fenwick2D.cpp)), where we normally would use 2D Prefix-Sums or kadane.
+
+
+
 Often n numbers, and q queries of 2 types. 
 For the first type, we need to change the some range/point of our initial numbers. `update(idx, val)`. </br>
-For the second type, we need to calculate the sum of a given range `query(idxLeft, idxRight)`. Note any associative function (the opertion is the same from left and from right) can be used instad of the sum-operation, e.g. minimum, maximum, multiplication (also modulo), matrix-multiplication (associative but not commutative), bitwise operations (`&`, `|`, `^`) or GCD (which doesn't run in O(1), so it will change the overall complexity).
+For the second type, we need to calculate the sum of a given range `query(idxLeft, idxRight)`. Note any associative function (it doesn't matter which operation is done first) can be used instad of the sum-operation, e.g. minimum, maximum, multiplication (also modulo), matrix-multiplication (associative but not commutative, e.g. multiplication form left and right are differnt), bitwise operations (`&`, `|`, `^`) or GCD (which doesn't run in O(1), so it will change the overall complexity).
+
 
 
 ## ST
