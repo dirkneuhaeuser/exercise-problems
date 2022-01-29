@@ -76,12 +76,47 @@ For the first type, we need to change the some range/point of our initial number
 For the second type, we need to calculate the sum of a given range `query(idxLeft, idxRight)`. Note any associative function (it doesn't matter which operation is done first) can be used instad of the sum-operation, e.g. minimum, maximum, multiplication (also modulo), matrix-multiplication (associative but not commutative, e.g. multiplication form left and right are differnt), bitwise operations (`&`, `|`, `^`) or GCD (which doesn't run in O(1), so it will change the overall complexity).
 
 
+## Order Statistic Tree
+Order Statistic Tree (**OST**) is a balanced BST, which also saves the size of each subtree. 
+This datastructure can be used to answer order-related queries like "what it the k-th smallest elment?" on dynammic data in  <img src="https://render.githubusercontent.com/render/math?math=O(\log n)"> time (as we have to find the specific node first in <img src="https://render.githubusercontent.com/render/math?math=O(\log n)">).
 
-## ST
+```
+#include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
 
-// goal: narrow L and R down, s.t. the intervall of this node captured.
-Often it is sufficient to use BIT, but if the operation is not inversable like max or min, or when the states are a bit more complicated then we can still use a ST. A ST uses slightly more memory, and implementationwise a bit more sophisicated.
-With Lazy Propagation we can go for efficient (log n) range updates as well.
+using namespace __gnu_pbds;
+
+template <typename T>
+using ost = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+// To use ordered use ordered_multiset<type>S something like this
+
+//int x=1;
+//ost<ll> tree;
+//tree.insert(x);
+//ll low=tree.order_of_key(x); // this is not possible with normal multiset. There you must have use distance(s.begin(), iterator), which takes O(n);
+//tree.lower_bound(x)
+//ll secondSmallest = *tree.find_by_order(1); 
+ ```
+
+When using it as a **multiset** (and allow the same value several times), we have to take the operator `less_equal`. However, this comes with some pitfalls as well:
+
+`find` will always return end. </br>
+`lower_bound` works like upper_bound in normal set (to return the first element > it)</br>
+`upper_bound` works like lower_bound in normal set (to return the first element >= it)</br>
+`order_of_key(x)` will get you the order of the first key==x (even though this key might be available by many orders)</br>
+`find_by_order(x)` works as expected</br>
+`erase` by value does not work anymore. Use `t.erase(t.upper_bound(1))`</br>
+
+
+Instead of using an OST, we could also rely on the **BIT/Fenwick** to to order-related queries. If we have an elment `a`, we just add +1 to it and now, we can query, the sum to a specific answer, getting the number of elements before it. However, **often an OST is prefable**, as it is not restricted to low numbers (roughly 1M), but its tree can have anthing which is sortable (e.g. strings).
+
+## Segment-Tree 
+
+Within a Segment-Tree (ST) the operatin does **not need to be inversable** and thus, a ST is more powerful than a BIT/Fenwick. Moreover, it is a good choice, when the operation and states are a bit more complicated. ST use slightly more memory (we need up to 4t imes the space of the initial array).
+The idea is that each node within the ST is in charge of a segment `L` to `R`. When quering or updating, we give a range `i` to `j`, and we go down the tree, trying find nodes, which are fully captured by thins range and directly update or return.
+With **Lazy Propagation** we can go for efficient (log n) range updates as well. The reasoning is, that ones we are at a node, which is fully captured, we set a lazy flag and stop here. Only the time, when we really need to go deeper, we will take this lazy-value and also compute the up-to-date values for the children.
+Figuratively, we can say, that old operations are further down in the root tree, while new ones are up. Each time we visit a node, we **propagate it's lazy flag furhter down**. Take into consideration, that for the lazy propagation to work, you might need to **merge lazy-flags**, if the kid already has one.
 
 When the states are more complicated it is useful to implement a `struct Node`. This also allows for defining `operator +`, such that we don't need to do this within our conq function inside the segment-tree. An example of how to implement a node to get the minimum and also the count of all the elements having this min is defined below:
 ```
@@ -102,14 +137,6 @@ struct Node{
 };
 ```
 
-Otherwise define a value as INVALID, which doesn't occur, or take a neutral element (sometimes not applicable, e.g. when assigning values to whole segments). 
-### lazy propagation
-
-Old operations are further down in the root tree, while new ones are up. Each time we visit a node, we propagate it furhter down. 
-Take into consideration, that for the lazy propagation to work, you might need to merge the propagated operation from the mother to the child.
-
-
-Note: If you don't use lazy-propagation, but instead leave the operation where applied and when querying going from root to your queried nodes, then these operations need to be commutative (the order shall not matter).
 
 To apply lazy-propagation, and stop at an inner node, the update function needs to distributive relative to the calc(query)function.
 E.g. when applying the operation \* with x, we don't need to recurse to the children, but instead just use their old intermediate values: query(a\*x, b\*x) = query(a, b) \* x.
@@ -146,18 +173,4 @@ When we have 2 Dimensions and each node of the first dimension contains another 
 ### Quadtree
 A quadtree is a tree, in which each inner node has 4 children. This helps to divide the 2D-grid recursively into north-east, north-west, south-easth and south-west, such that each node can dicide what to do with values of its children. Note that the runtime of the quadtree is worse than of a 2D-Segmenttree. Proof by Mastertheorem.
 
-## Order Statistic Tree
-Order Statistic Tree (OST) is a balanced BST, which also saves the size of each subtree. 
-This datastructure can be used to answer order-related queries like "what it the k-th smallest elment?" on dynammic data in log(n) time (as we have to find the specific node first in log(n).
 
-An alternative to OST is a Fenwick Tree, as implemented [here](https://www.geeksforgeeks.org/order-statistic-tree-using-fenwick-tree-bit/). 
-However, this only works for finding the order of indices (small integers), while the OST implemented as a balanced Red–black tree can take any type with smaller-comperator.
-
-When using it as a **multiset** (and allow the same value several times), we have to take the operator `less_equal`. However, this comes with some pitfalls as well:
-
-`find` will always return end. </br>
-`lower_bound` works like upper_bound in normal set (to return the first element > it)</br>
-`upper_bound` works like lower_bound in normal set (to return the first element >= it)</br>
-`order_of_key` will get you the first order of the key (even though this key might be available by many orders)</br>
-`find_by_order` works as expected</br>
-`erase` by value does not work anymore. Use `t.erase(t.upper_bound(1))`</br>
