@@ -124,13 +124,13 @@ E.g. When having the update function <img src="https://render.githubusercontent.
 <img src="https://render.githubusercontent.com/render/math?math=\text{query}(a \odot x, b \odot x) = \text{query}(a, b) \odot x">
 
 
-Distributive are for example:
+**Distributive** are for example:
 - multiplication relative to sum-query
 - bitwise AND relative to bitwise OR-query
 - Addition relative to max- or min-query
 - Assignment relative to max- or mi-query
 
-Not distribute are:
+**Non-distribute** are:
 - Addition relative to sum-query
 - Assignment relative to sum-query
 
@@ -241,7 +241,7 @@ public:
 
 This normal implementation works with `NEUTRAL_UPDATE` and `NEUTRAL_QUERY`. However some operation, like assignment do not have a neutral, then, we need a dummy, or a value out of range.
 
-When the states are more complicated it is useful to implement a `struct Node`. This also allows for defining `operator +`, for more see [here](https://github.com/dirkneuhaeuser/algorithms/blob/master/templates/st_node.cpp).
+When the **states are more complicated** it is useful to implement a `struct Node`. This also allows for defining `operator +`, for more see [here](https://github.com/dirkneuhaeuser/algorithms/blob/master/templates/st_node.cpp).
 ```
 struct Node{
     ll val;
@@ -260,7 +260,7 @@ struct Node{
 };
 ```
 
-Also note, sometimes, the** memory pressure** is very high and we cannot even initaliase the ST in time. Then a **Sparse-Segmente-Tree** could be favoured. Instead of allocating the memory for all potential segments, we only create them on the fly (Pointer-like construction here). A potential implementation is [here](https://github.com/dirkneuhaeuser/algorithms/blob/master/templates/sparse_st.cpp).
+Also note, sometimes, the **memory pressure** is very high and we cannot even initaliase the ST in time. Then a **Sparse-Segmente-Tree** could be favoured. Instead of allocating the memory for all potential segments, we only create them on the fly (Pointer-like construction here). A potential implementation is [here](https://github.com/dirkneuhaeuser/algorithms/blob/master/templates/sparse_st.cpp).
 
 When having **2 Dimensions** and each node of the first dimension contains another ST. The implementaion is a bit tedious and also we **cannot use lazy propagation** thus only have point-updates at our disposal. An implementation for a **2D-Segment-Tree** can be found [here](www.google.de).
 Building takes <img src="https://render.githubusercontent.com/render/math?math=O(n \cdot m)">, while quering/updating takes <img src="https://render.githubusercontent.com/render/math?math=O(\log n \cdot \log m)">. As an alternative, we could use a **quadtree** is a tree, in which each inner node has 4 children. This helps to divide the 2D-grid recursively into north-east, north-west, south-easth and south-west, such that each node can decide what to do with values of its children. Note that the runtime of the quadtree is worse than of a 2D-Segmenttree.
